@@ -14,8 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework.documentation import include_docs_urls
+
+from rest_framework.routers import DefaultRouter
+
+API_TITLE = 'COVID-19 Data API'
+API_DESCRIPTION = 'This API provides COVID-19 related data.'
+
+# Create a router and register our viewsets with it.
+router = DefaultRouter()
+# router.register(r'snippets', views.SnippetViewSet)
 
 urlpatterns = [
+    path('', include(router.urls)),
     path('admin/', admin.site.urls),
+
+    path('docs/', include_docs_urls(title=API_TITLE, description=API_DESCRIPTION)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
