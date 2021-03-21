@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from pathlib import Path
+import secrets_app
+from conf import database
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '=e1w-2)-)z*+y%1sv(7-v(&u6=)piijpy+*!6*hp2$ziq_=3ws'
+SECRET_KEY = secrets_app.DJANGO_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,6 +41,14 @@ INSTALLED_APPS = [
     # REST API framework
     'rest_framework',
 
+    # APPs
+    'covid_global',
+    'covid_uk',
+    'covid_arima_pred',
+    'covid_dashboard',
+    'owid',
+    'google_mobility'
+
 ]
 
 MIDDLEWARE = [
@@ -49,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware'
 ]
 
 ROOT_URLCONF = 'covid_api_django.urls'
@@ -75,11 +86,20 @@ WSGI_APPLICATION = 'covid_api_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DB Routers
+DATABASE_ROUTERS = ['dbRouter.CheckerRouter', ]
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    name: {
+        k: target
+        if k == 'NAME' else v
+        for k, v in database.DATABASE_INFOS.items()
+    } for name, target in database.DATABASE_NAMES.items()
+}
+
+DATABASES['default'] = {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 }
 
 # Password validation

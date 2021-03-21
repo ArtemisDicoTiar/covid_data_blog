@@ -17,3 +17,5 @@ lib/
 
 
 
+/db.cnf
+/secrets_app.py
