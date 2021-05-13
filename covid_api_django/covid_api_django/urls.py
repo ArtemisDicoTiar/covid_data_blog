@@ -20,6 +20,7 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 
 from covid_global import views as covid_global_views
+from covid_info import views as covid_info_views
 
 API_TITLE = 'COVID-19 Data API'
 API_DESCRIPTION = 'This API provides COVID-19 related data.'
@@ -27,7 +28,9 @@ API_DESCRIPTION = 'This API provides COVID-19 related data.'
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
 router.register(r'covid_global', covid_global_views.COVIDGlobalMetaView)
-router.register(r'covid_global/active', covid_global_views.COVIDGlobal_ActiveContinentView)
+router.register(r'covid_info/cases/global', covid_info_views.COVID_CasesView)
+router.register(r'covid_info/prediction/global', covid_info_views.COVID_Cases_predictionView)
+router.register(r'covid_info/pred_accuracy/global', covid_info_views.COVID_Cases_prediction_accuracyView)
 
 urlpatterns = [
     path('', include(router.urls)),

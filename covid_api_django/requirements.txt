@@ -6,7 +6,7 @@ coreschema==0.0.4
 Django==3.1.7
 djangorestframework==3.12.2
 drf-yasg==1.20.0
-idna==3.1
+idna<3
 importlib-metadata==3.7.3
 inflection==0.5.1
 itypes==1.2.0
@@ -25,4 +25,5 @@ sqlparse==0.4.1
 typing-extensions==3.7.4.3
 uritemplate==3.0.1
 urllib3==1.26.4
+uWSGI==2.0.19.1
 zipp==3.4.1

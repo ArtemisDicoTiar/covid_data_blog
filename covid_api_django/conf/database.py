@@ -10,21 +10,7 @@ DATABASE_INFOS = {
 }
 
 DATABASE_NAMES = {
-    'information_schema': 'INFORMATION_SCEMA',
+    'information_schema': 'INFORMATION_SCHEMA',
     'covid_global_cumulative': 'covid',
-    'covid_global_new': 'covid_new',
-
-    'covid_uk_raw_ltla': 'covid_uk_raw_ltla',
-    'covid_uk_raw_utla': 'covid_uk_raw_utla',
-    'covid_uk_ltla': 'covid_uk_ltla',
-    'covid_uk_utla': 'covid_uk_utla',
-
-    'covid_dashboard': 'covid_dashboard',
-
-    'owid_vac_test': 'covid_info_owid',
-    'owid_pscore': 'owid_p_scores',
-    'owid_region': 'owid_ext_infos',
-
-    'google_mobility': 'google_mobility',
-
+    'covid_info': 'covid_info'
 }

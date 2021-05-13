@@ -41,14 +41,12 @@ INSTALLED_APPS = [
     # REST API framework
     'rest_framework',
 
+    # filters
+    'django_filters',
+
     # APPs
     'covid_global',
-    'covid_uk',
-    'covid_arima_pred',
-    'covid_dashboard',
-    'owid',
-    'google_mobility'
-
+    'covid_info'
 ]
 
 MIDDLEWARE = [
@@ -122,8 +120,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # RestFramework
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 30,
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
 }
 
