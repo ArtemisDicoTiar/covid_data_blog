@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  nginx:
+    build: ./nginx
+    ports:
+      - 1300:80
+    depends_on:
+      - web
+    volumes:
+      - static-files:/static
+    restart: "on-failure"
+
+  web:
+    build:
+      context: . #build the image for the web service from the dockerfile in parent directory
+      dockerfile: Dockerfile
+    command: uwsgi --http :8000 --home ./ --chdir ./ --wsgi-file covid_api_django/wsgi.py
+    volumes:
+      - static-files:/static
+    env_file:
+      - .env
+
+
+    expose:
+      - "8000"
+    restart: "on-failure"
+#    depends_on:
+#      - db
+
+#  db:
+#    image: mariadb
+#    volumes:
+#      - type: volume
+#      - target: /var/lib/mysql
+#      - read_only: true
+
+volumes:
+  static-files:
