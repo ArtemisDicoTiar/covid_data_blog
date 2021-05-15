@@ -9,7 +9,7 @@ class CSSE_CasesSerializer(serializers.ModelSerializer):
         fields = [
             'CountryCode',
             'ContinentName',
-            'SubdivisionCode',
+            # 'SubdivisionCode',
             'date',
             'confirmed',
             'deaths',
@@ -24,8 +24,8 @@ class CSSE_Cases_predictionSerializer(serializers.ModelSerializer):
         model = CSSE_Cases_prediction
         fields = [
             'predicted',
-            # 'CountryCode',
-            # 'ContinentName',
+            'CountryCode',
+            'ContinentName',
             'date',
             'confirmed_prediction',
             'deaths_prediction',
@@ -37,8 +37,8 @@ class CSSE_Cases_prediction_accuracySerializer(serializers.ModelSerializer):
         model = CSSE_Cases_prediction_accuracy
         fields = [
             'calculated',
-            # 'CountryCode',
-            # 'ContinentName',
+            'CountryCode',
+            'ContinentName',
             'yesterday_accuracy',
             'lastweek_accuracy',
         ]
