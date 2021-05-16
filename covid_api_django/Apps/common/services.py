@@ -3,6 +3,8 @@ from dataclasses import dataclass
 
 import coreapi
 import coreschema
+from rest_framework.decorators import action as dec_action
+from django_rest_params.decorators import params as dec_params
 from rest_framework.schemas import ManualSchema
 
 
@@ -35,21 +37,24 @@ class Params:
 
 class BaseService:
     params: [[Params]] = list()
-    fields = list()
     methods: [[str]] = list()
 
     def __init__(self):
-        for param in self.params:
-            self.fields.append(
-                coreapi.Field(
-                    name=param.name,
-                    required=param.required,
-                    location=param.location,
-                    schema=param.get_schema(),
-                ),
-            )
-
         for idx, method in enumerate(self.methods):
             self.methods[idx] = method.lower()
 
-        self.schema = ManualSchema(fields=self.fields)
+        self.schema = ManualSchema(fields=[
+            coreapi.Field(
+                name=param.name,
+                required=param.required,
+                location=param.location,
+                schema=param.get_schema(),
+            )
+            for param in self.params
+        ])
+
+    def parameters(self):
+        return dec_params(**{param.name: param.dtype for param in self.params if param.location == 'query'})
+
+    def actions(self):
+        return dec_action(methods=self.methods, detail=False)

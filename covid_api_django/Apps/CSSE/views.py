@@ -14,7 +14,6 @@ from django_rest_params.decorators import params
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework import generics
 from rest_framework import viewsets
-from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.schemas import AutoSchema, ManualSchema
@@ -25,91 +24,74 @@ from Apps.CSSE.serializers import *
 from Apps.CSSE.models import *
 from route_decorator import Route
 
-from Apps.CSSE.services import CSSEService
+from Apps.CSSE.services import *
 
 route = Route('/covid')
 
 
-@route('/global', 'CSSE_cases')
-class CSSE_CasesView(viewsets.ViewSet, ):
-    csseService = CSSEService(filterRegion='country')
+@route('/global', 'CSSE_CaseView')
+class CSSE_CasesView(viewsets.ViewSet):
+    service = CSSE_CaseService()
 
-    schema = csseService.schema
+    schema = service.schema
 
-    @action(methods=csseService.methods, detail=False)
-    @params(CountryCode=str,
-            startDate=str,
-            offset=int)
-    # @CSSEService.param()
-    def cases(self, *args, **kwargs):
-        CountryCode = kwargs['CountryCode']
-        startDate = kwargs['startDate']
-        offset = kwargs['offset']
+    @service.actions()
+    @service.parameters()
+    def cases(self, request, *args, **kwargs):
+        serializer_class = None
+        if kwargs['regionType'] == 'country':
+            quer = self.service.get_queryset(*args, **kwargs)
+            serializer_class = CSSE_CasesCountrySerializer(
+                self.service.get_queryset(*args, **kwargs), many=True
+            )
+        elif kwargs['regionType'] == 'continent':
+            serializer_class = CSSE_CasesContinentSerializer(
+                self.service.get_queryset(*args, **kwargs), many=True
+            )
 
-        queryset = CSSE_Cases.objects \
-            .filter(CountryCode=CountryCode,
-                    date__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
-                                 (datetime.strptime(startDate, '%Y-%m-%d')
-                                  + timedelta(days=offset - 1)).date()
-                                 )
-                    )
-        serializer_class = CSSE_CasesSerializer(queryset, many=True)
-
-        return Response(self.get_linearised_data(serializer_class))
-
-# class CSSE_CasesView(viewsets.ModelViewSet):
-#     http_method_names = ['get']
-#     # queryset = CSSE_Cases.objects.all()
-#     serializer_class = CSSE_CasesSerializer
-#
-#     filterset_fields = {
-#         'CountryCode': ['exact'],
-#         'date': ['range', 'exact'],
-#     }
-#
-# @action(methods=['get'], detail=True)
-# @params(CountryCode=str,
-#         startDate=str,
-#         offset=int)
-# def test_function(self, request, CountryCode, startDate, offset, *args, **kwargs):
-#     queryset = COVID_Cases.objects \
-#         .filter(CountryCode=CountryCode,
-#                 date__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
-#                              (datetime.strptime(startDate, '%Y-%m-%d')
-#                               + timedelta(days=offset-1)).date()
-#                              )
-#                 )
-#     serializer_class = COVID_CasesSerializer(queryset, many=True)
-#
-#     return Response(
-#         {
-#             key: [
-#                 serializer_class.data[row][key]
-#                 for row in range(offset)
-#             ]
-#             for key in serializer_class.child.fields
-#         }
-#     )
+        return Response(self.service.get_linearised_data(serializer_class, *args, **kwargs))
 
 
-# class CSSE_Cases_predictionView(viewsets.ModelViewSet):
-#     http_method_names = ['get']
-#     queryset = COVID_Cases_prediction.objects.all()
-#     serializer_class = COVID_Cases_predictionSerializer
-#
-#     filterset_fields = {
-#         'CountryCode': ['exact'],
-#         'predicted': ['range', 'exact'],
-#         'date': ['range', 'exact'],
-#     }
-#
-#
-# class CSSE_Cases_prediction_accuracyView(viewsets.ModelViewSet):
-#     http_method_names = ['get']
-#     queryset = COVID_Cases_prediction_accuracy.objects.all()
-#     serializer_class = COVID_Cases_prediction_accuracySerializer
-#
-#     filterset_fields = {
-#         'CountryCode': ['exact'],
-#         'calculated': ['exact'],
-#     }
+@route('/global', 'CSSE_CasePredictionView')
+class CSSE_CasesPredictionView(viewsets.ViewSet):
+    service = CSSE_CasePredictionService()
+
+    schema = service.schema
+
+    @service.actions()
+    @service.parameters()
+    def predictedCases(self, request, *args, **kwargs):
+        serializer_class = None
+        if kwargs['regionType'] == 'country':
+            serializer_class = CSSE_Cases_predictionCountrySerializer(
+                self.service.get_queryset(*args, **kwargs), many=True
+            )
+        elif kwargs['regionType'] == 'continent':
+            serializer_class = CSSE_Cases_predictionContinentSerializer(
+                self.service.get_queryset(*args, **kwargs), many=True
+            )
+
+        return Response(self.service.get_linearised_data(serializer_class, *args, **kwargs))
+
+
+@route('/global', 'CSSE_CasePredictionAccuracyView')
+class CSSE_CasesPredictionView(viewsets.ViewSet):
+    service = CSSE_CasePredictionAccuracyService()
+
+    schema = service.schema
+
+    @service.actions()
+    @service.parameters()
+    def predictedAccuracy(self, request, *args, **kwargs):
+        serializer_class = None
+        if kwargs['regionType'] == 'country':
+            serializer_class = CSSE_Cases_prediction_accuracyCountrySerializer(
+                self.service.get_queryset(*args, **kwargs), many=True
+            )
+
+        elif kwargs['regionType'] == 'continent':
+            serializer_class = CSSE_Cases_prediction_accuracyContinentSerializer(
+                self.service.get_queryset(*args, **kwargs), many=True
+            )
+
+        return Response(self.service.get_linearised_data(serializer_class, *args, **kwargs))

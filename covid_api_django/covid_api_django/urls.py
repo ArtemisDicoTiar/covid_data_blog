@@ -29,20 +29,20 @@ API_DESCRIPTION = 'This API provides COVID-19 related data.'
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
 router.register(r'covid_global', covid_global_views.COVIDGlobalMetaView)
-
-router.register(r'covid/cases/global', covid_info_views.COVID_CasesView)
-router.register(r'covid/cases/uk', covid_info_views.UK_CasesView)
-router.register(r'covid/prediction/global', covid_info_views.COVID_Cases_predictionView)
-router.register(r'covid/prediction/uk', covid_info_views.UK_Cases_predictionView)
-router.register(r'covid/pred_accuracy/global', covid_info_views.COVID_Cases_prediction_accuracyView)
-router.register(r'covid/pred_accuracy/uk', covid_info_views.UK_Cases_prediction_accuracyView)
-
-router.register(r'google_mobility', covid_info_views.Google_MobilityView)
-
-router.register(r'owid/health', covid_info_views.OWID_healthView)
-router.register(r'owid/mortality', covid_info_views.OWID_mortalityView)
-router.register(r'owid/testing', covid_info_views.Google_MobilityView)
-router.register(r'owid/vaccination', covid_info_views.Google_MobilityView)
+#
+# router.register(r'covid/cases/global', covid_info_views.COVID_CasesView)
+# router.register(r'covid/cases/uk', covid_info_views.UK_CasesView)
+# router.register(r'covid/prediction/global', covid_info_views.COVID_Cases_predictionView)
+# router.register(r'covid/prediction/uk', covid_info_views.UK_Cases_predictionView)
+# router.register(r'covid/pred_accuracy/global', covid_info_views.COVID_Cases_prediction_accuracyView)
+# router.register(r'covid/pred_accuracy/uk', covid_info_views.UK_Cases_prediction_accuracyView)
+#
+# router.register(r'google_mobility', covid_info_views.Google_MobilityView)
+#
+# router.register(r'owid/health', covid_info_views.OWID_healthView)
+# router.register(r'owid/mortality', covid_info_views.OWID_mortalityView)
+# router.register(r'owid/testing', covid_info_views.Google_MobilityView)
+# router.register(r'owid/vaccination', covid_info_views.Google_MobilityView)
 
 for ptrn in CSSE_views.route.patterns:
     router.register(prefix=ptrn.pattern.regex.pattern[1:-1], viewset=ptrn.callback, basename=ptrn.name)
