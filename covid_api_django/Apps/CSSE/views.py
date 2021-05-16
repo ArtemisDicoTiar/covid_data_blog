@@ -29,8 +29,8 @@ from Apps.CSSE.services import *
 route = Route('/covid')
 
 
-@route('/global', 'CSSE_CaseController')
-class CSSE_CasesController(viewsets.ViewSet):
+@route('/global', 'CSSE_CaseView')
+class CSSE_CasesView(viewsets.ViewSet):
     service = CSSE_CaseService()
 
     schema = service.schema
@@ -38,14 +38,22 @@ class CSSE_CasesController(viewsets.ViewSet):
     @service.actions()
     @service.parameters()
     def cases(self, request, *args, **kwargs):
-        serializer_class = CSSE_CasesSerializer(self.service.get_queryset(*args, **kwargs), many=True)
+        serializer_class = None
+        if kwargs['regionType'] == 'country':
+            quer = self.service.get_queryset(*args, **kwargs)
+            serializer_class = CSSE_CasesCountrySerializer(
+                self.service.get_queryset(*args, **kwargs), many=True
+            )
+        elif kwargs['regionType'] == 'continent':
+            serializer_class = CSSE_CasesContinentSerializer(
+                self.service.get_queryset(*args, **kwargs), many=True
+            )
 
-        return Response(self.service.get_linearised_data(serializer_class))
+        return Response(self.service.get_linearised_data(serializer_class, *args, **kwargs))
 
 
-@route('/global', 'CSSE_CasePredictionController')
-class CSSE_CasesPredictionController(viewsets.ViewSet):
-
+@route('/global', 'CSSE_CasePredictionView')
+class CSSE_CasesPredictionView(viewsets.ViewSet):
     service = CSSE_CasePredictionService()
 
     schema = service.schema
@@ -53,6 +61,37 @@ class CSSE_CasesPredictionController(viewsets.ViewSet):
     @service.actions()
     @service.parameters()
     def predictedCases(self, request, *args, **kwargs):
-        serializer_class = CSSE_Cases_predictionSerializer(self.service.get_queryset(*args, **kwargs), many=True)
+        serializer_class = None
+        if kwargs['regionType'] == 'country':
+            serializer_class = CSSE_Cases_predictionCountrySerializer(
+                self.service.get_queryset(*args, **kwargs), many=True
+            )
+        elif kwargs['regionType'] == 'continent':
+            serializer_class = CSSE_Cases_predictionContinentSerializer(
+                self.service.get_queryset(*args, **kwargs), many=True
+            )
 
-        return Response(self.service.get_linearised_data(serializer_class))
+        return Response(self.service.get_linearised_data(serializer_class, *args, **kwargs))
+
+
+@route('/global', 'CSSE_CasePredictionAccuracyView')
+class CSSE_CasesPredictionView(viewsets.ViewSet):
+    service = CSSE_CasePredictionAccuracyService()
+
+    schema = service.schema
+
+    @service.actions()
+    @service.parameters()
+    def predictedAccuracy(self, request, *args, **kwargs):
+        serializer_class = None
+        if kwargs['regionType'] == 'country':
+            serializer_class = CSSE_Cases_prediction_accuracyCountrySerializer(
+                self.service.get_queryset(*args, **kwargs), many=True
+            )
+
+        elif kwargs['regionType'] == 'continent':
+            serializer_class = CSSE_Cases_prediction_accuracyContinentSerializer(
+                self.service.get_queryset(*args, **kwargs), many=True
+            )
+
+        return Response(self.service.get_linearised_data(serializer_class, *args, **kwargs))
