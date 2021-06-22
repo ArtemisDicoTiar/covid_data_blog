@@ -9,7 +9,7 @@ from django.db.models import Count, Sum
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from django_rest_params.decorators import params
+
 from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -29,6 +29,7 @@ from route_decorator import Route
 
 from Apps.CSSE.services import CSSEService, CSSESchema
 from Apps.common.services import Params
+from Apps.common.utils.params import params
 from Apps.common.utils.schemaUtils import append_fields
 
 route = Route('/covid')

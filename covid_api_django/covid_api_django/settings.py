@@ -43,7 +43,6 @@ INSTALLED_APPS = [
 
     # Libraries
     'django_filters',
-    'django_rest_params',
 
     # APPs
     'covid_global',

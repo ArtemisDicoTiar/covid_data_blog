@@ -7,7 +7,6 @@ from django.db.models import Count, Sum
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from django_rest_params.decorators import params
 
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework import generics
@@ -16,6 +15,7 @@ from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
+from Apps.common.utils.params import params
 from covid_info.serializers import *
 from covid_info.models import *
 
