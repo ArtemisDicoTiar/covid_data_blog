@@ -10,6 +10,7 @@ from django.db.models import Count, Sum
 from django_filters.rest_framework import DjangoFilterBackend
 
 from django_rest_params.decorators import params
+from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework import generics
@@ -21,11 +22,14 @@ from rest_framework.schemas import AutoSchema, ManualSchema
 from rest_framework.views import APIView
 from route_decorator import Route
 
+from Apps.CSSE.filter import prediction_parameter_validate
 from Apps.CSSE.serializers import *
 from Apps.CSSE.models import *
 from route_decorator import Route
 
-from Apps.CSSE.services import CSSEService
+from Apps.CSSE.services import CSSEService, CSSESchema
+from Apps.common.services import Params
+from Apps.common.utils.schemaUtils import append_fields
 
 route = Route('/covid')
 
@@ -40,7 +44,6 @@ class CSSE_CasesView(viewsets.ViewSet, ):
     @params(CountryCode=str,
             startDate=str,
             offset=int)
-    # @CSSEService.param()
     def cases(self, *args, **kwargs):
         CountryCode = kwargs['CountryCode']
         startDate = kwargs['startDate']
@@ -55,61 +58,29 @@ class CSSE_CasesView(viewsets.ViewSet, ):
                     )
         serializer_class = CSSE_CasesSerializer(queryset, many=True)
 
-        return Response(self.get_linearised_data(serializer_class))
+        return Response(self.csseService.get_linearised_data(serializer_class))
 
-# class CSSE_CasesView(viewsets.ModelViewSet):
-#     http_method_names = ['get']
-#     # queryset = CSSE_Cases.objects.all()
-#     serializer_class = CSSE_CasesSerializer
-#
-#     filterset_fields = {
-#         'CountryCode': ['exact'],
-#         'date': ['range', 'exact'],
-#     }
-#
-# @action(methods=['get'], detail=True)
-# @params(CountryCode=str,
-#         startDate=str,
-#         offset=int)
-# def test_function(self, request, CountryCode, startDate, offset, *args, **kwargs):
-#     queryset = COVID_Cases.objects \
-#         .filter(CountryCode=CountryCode,
-#                 date__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
-#                              (datetime.strptime(startDate, '%Y-%m-%d')
-#                               + timedelta(days=offset-1)).date()
-#                              )
-#                 )
-#     serializer_class = COVID_CasesSerializer(queryset, many=True)
-#
-#     return Response(
-#         {
-#             key: [
-#                 serializer_class.data[row][key]
-#                 for row in range(offset)
-#             ]
-#             for key in serializer_class.child.fields
-#         }
-#     )
+    @action(methods=csseService.methods, detail=False)
+    @params(CountryCode=str,
+            predictedDate=str,
+            startDate=str,
+            offset=int)
+    def prediction(self, *args, **kwargs):
+        CountryCode = kwargs['CountryCode']
+        predictedDate = kwargs['predictedDate']
+        startDate = kwargs['startDate']
+        offset = kwargs['offset']
 
+        prediction_parameter_validate(predictedDate=predictedDate, date=startDate, offset=offset)
 
-# class CSSE_Cases_predictionView(viewsets.ModelViewSet):
-#     http_method_names = ['get']
-#     queryset = COVID_Cases_prediction.objects.all()
-#     serializer_class = COVID_Cases_predictionSerializer
-#
-#     filterset_fields = {
-#         'CountryCode': ['exact'],
-#         'predicted': ['range', 'exact'],
-#         'date': ['range', 'exact'],
-#     }
-#
-#
-# class CSSE_Cases_prediction_accuracyView(viewsets.ModelViewSet):
-#     http_method_names = ['get']
-#     queryset = COVID_Cases_prediction_accuracy.objects.all()
-#     serializer_class = COVID_Cases_prediction_accuracySerializer
-#
-#     filterset_fields = {
-#         'CountryCode': ['exact'],
-#         'calculated': ['exact'],
-#     }
+        queryset = CSSE_Cases_prediction.objects \
+            .filter(CountryCode=CountryCode,
+                    predicted__exact=datetime.strptime(predictedDate, '%Y-%m-%d').date(),
+                    date__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
+                                 (datetime.strptime(startDate, '%Y-%m-%d')
+                                  + timedelta(days=offset - 1)).date()
+                                 )
+                    )
+        serializer_class = CSSE_Cases_predictionSerializer(queryset, many=True)
+
+        return Response(self.csseService.get_linearised_data(serializer_class))

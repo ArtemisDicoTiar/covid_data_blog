@@ -45,33 +45,3 @@ class CSSE_Cases_prediction_accuracy(models.Model):
     class Meta:
         app_label = 'covid_info'
         db_table = 'COVID_Cases_prediction_accuracy'
-# @dataclass
-# class CSSE_Cases(models.Model):
-#     CountryCode: str
-#     ContinentName: str
-#     SubdivisionCode: typing.Optional[str]
-#     date: datetime.date
-#     confirmed: float
-#     deaths: float
-#     recovered: float
-#     removed: float
-#     active: float
-#
-#
-# @dataclass
-# class CSSE_Cases_prediction(models.Model):
-#     predicted: datetime.date
-#     CountryCode: str
-#     ContinentName: str
-#     date: datetime.date
-#     confirmed_prediction: float
-#     deaths_prediction: float
-#
-#
-# @dataclass
-# class CSSE_Cases_prediction_accuracy(models.Model):
-#     calculated: datetime.date
-#     CountryCode: str
-#     ContinentName: str
-#     yesterday_accuracy: float
-#     lastweek_accuracy: float

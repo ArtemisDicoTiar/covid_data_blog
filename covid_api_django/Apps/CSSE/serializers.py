@@ -9,7 +9,7 @@ class CSSE_CasesSerializer(serializers.ModelSerializer):
         fields = [
             'CountryCode',
             'ContinentName',
-            'SubdivisionCode',
+            # 'SubdivisionCode',
             'date',
             'confirmed',
             'deaths',
