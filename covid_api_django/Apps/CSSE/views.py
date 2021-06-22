@@ -71,7 +71,8 @@ class CSSE_CasesView(viewsets.ViewSet, ):
         startDate = kwargs['startDate']
         offset = kwargs['offset']
 
-        prediction_parameter_validate(predictedDate=predictedDate, date=startDate, offset=offset)
+        if prediction_parameter_validate(predictedDate=predictedDate, date=startDate, offset=offset):
+            return prediction_parameter_validate(predictedDate=predictedDate, date=startDate, offset=offset)
 
         queryset = CSSE_Cases_prediction.objects \
             .filter(CountryCode=CountryCode,
@@ -82,5 +83,25 @@ class CSSE_CasesView(viewsets.ViewSet, ):
                                  )
                     )
         serializer_class = CSSE_Cases_predictionSerializer(queryset, many=True)
+
+        return Response(self.csseService.get_linearised_data(serializer_class))
+
+    @action(methods=csseService.methods, detail=False)
+    @params(CountryCode=str,
+            startDate=str,
+            offset=int)
+    def predictionAccuracy(self, *args, **kwargs):
+        CountryCode = kwargs['CountryCode']
+        startDate = kwargs['startDate']
+        offset = kwargs['offset']
+
+        queryset = CSSE_Cases_prediction_accuracy.objects \
+            .filter(CountryCode=CountryCode,
+                    calculated__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
+                                       (datetime.strptime(startDate, '%Y-%m-%d')
+                                        + timedelta(days=offset - 1)).date()
+                                       )
+                    )
+        serializer_class = CSSE_Cases_prediction_accuracySerializer(queryset, many=True)
 
         return Response(self.csseService.get_linearised_data(serializer_class))

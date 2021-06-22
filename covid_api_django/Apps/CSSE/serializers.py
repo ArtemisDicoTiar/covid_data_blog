@@ -7,7 +7,7 @@ class CSSE_CasesSerializer(serializers.ModelSerializer):
     class Meta:
         model = CSSE_Cases
         fields = [
-            'CountryCode',
+            # 'CountryCode',
             'ContinentName',
             # 'SubdivisionCode',
             'date',
@@ -25,7 +25,7 @@ class CSSE_Cases_predictionSerializer(serializers.ModelSerializer):
         fields = [
             'predicted',
             # 'CountryCode',
-            # 'ContinentName',
+            'ContinentName',
             'date',
             'confirmed_prediction',
             'deaths_prediction',
