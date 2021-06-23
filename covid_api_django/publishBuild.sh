@@ -1,2 +1,2 @@
 pip3 freeze > requirements.txt
-docker-compose up django_api -d
+docker-compose up -d django_api
