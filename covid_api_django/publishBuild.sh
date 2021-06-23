@@ -1,1 +1,1 @@
-docker-compose up -d django_api
+docker-compose up -d
