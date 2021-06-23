@@ -7,11 +7,12 @@ from route_decorator import Route
 
 from Apps.UK.serializers import *
 from Apps.UK.services import UKService
+from Apps.common.utils.filter import prediction_parameter_validate
 from Apps.common.utils.params import params
 
 # Create your views here.
 
-route = Route('/uk')
+route = Route('/covid')
 
 
 @route('/uk', 'UK_cases')
@@ -30,7 +31,7 @@ class UK_CasesView(viewsets.ViewSet, ):
         offset = kwargs['offset']
 
         queryset = UK_Cases.objects \
-            .filter(CountryCode=code,
+            .filter(code__exact=code,
                     date__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
                                  (datetime.strptime(startDate, '%Y-%m-%d')
                                   + timedelta(days=offset - 1)).date()
@@ -51,8 +52,11 @@ class UK_CasesView(viewsets.ViewSet, ):
         startDate = kwargs['startDate']
         offset = kwargs['offset']
 
+        if prediction_parameter_validate(predictedDate=predictedDate, date=startDate, offset=offset):
+            return prediction_parameter_validate(predictedDate=predictedDate, date=startDate, offset=offset)
+
         queryset = UK_Cases_prediction.objects \
-            .filter(CountryCode=code,
+            .filter(code__exact=code,
                     predicted__exact=datetime.strptime(predictedDate, '%Y-%m-%d').date(),
                     date__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
                                  (datetime.strptime(startDate, '%Y-%m-%d')
@@ -73,7 +77,7 @@ class UK_CasesView(viewsets.ViewSet, ):
         offset = kwargs['offset']
 
         queryset = UK_Cases_prediction_accuracy.objects \
-            .filter(CountryCode=code,
+            .filter(code__exact=code,
                     calculated__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
                                        (datetime.strptime(startDate, '%Y-%m-%d')
                                         + timedelta(days=offset - 1)).date()

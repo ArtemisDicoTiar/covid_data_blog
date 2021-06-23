@@ -5,9 +5,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from route_decorator import Route
 
-from Apps.CSSE.filter import prediction_parameter_validate
 from Apps.CSSE.serializers import *
 from Apps.CSSE.services import CSSEService
+from Apps.common.utils.filter import prediction_parameter_validate
 from Apps.common.utils.params import params
 
 # Create your views here.
