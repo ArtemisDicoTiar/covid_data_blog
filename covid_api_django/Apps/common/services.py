@@ -34,11 +34,13 @@ class Params:
 
 
 class BaseService:
-    params: [[Params]] = list()
-    fields = list()
-    methods: [[str]] = list()
+    def __init__(self,
+                 params: [[Params]],
+                 methods: [[str]]):
+        self.params: params
+        self.methods: methods
+        self.fields = list()
 
-    def __init__(self):
         for param in self.params:
             self.fields.append(
                 coreapi.Field(

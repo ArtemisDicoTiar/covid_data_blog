@@ -9,15 +9,15 @@ from rest_framework.schemas import ManualSchema, AutoSchema
 
 
 class CSSEService(BaseService):
-    params = [
-        Params(name='offset', dtype=int, required=True,
-               location='query', description="The number of dates from startDate."),
-        Params(name='startDate', dtype=str, required=True,
-               location='query', description="Query start date (format: %Y-%m-%d)"),
-    ]
-    methods = ['get']
-
     def __init__(self, filterRegion):
+        self.params = [
+            Params(name='offset', dtype=int, required=True,
+                   location='query', description="The number of dates from startDate."),
+            Params(name='startDate', dtype=str, required=True,
+                   location='query', description="Query start date (format: %Y-%m-%d)"),
+        ]
+        self.methods = ['get']
+
         if filterRegion.lower() == 'country':
             self.params.append(
                 Params(name='CountryCode', dtype=str, required=True,
@@ -32,7 +32,7 @@ class CSSEService(BaseService):
 
         self.params = self.params[::-1]
 
-        super().__init__()
+        super(CSSEService, self).__init__(params=self.params, methods=self.methods)
         self.schema = CSSESchema(self.fields)
 
     @staticmethod

@@ -1,36 +1,16 @@
-from datetime import date, datetime, timedelta
+from datetime import timedelta
 
-import coreapi
-import coreschema
-from django.shortcuts import render
-
-# Create your views here.
-from django.db.models import Count, Sum
-
-from django_filters.rest_framework import DjangoFilterBackend
-
-
-from drf_yasg.utils import swagger_auto_schema
-
-from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework import generics
 from rest_framework import viewsets
-from rest_framework.decorators import api_view, action
+from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.reverse import reverse
-from rest_framework.schemas import AutoSchema, ManualSchema
-from rest_framework.views import APIView
 from route_decorator import Route
 
 from Apps.CSSE.filter import prediction_parameter_validate
 from Apps.CSSE.serializers import *
-from Apps.CSSE.models import *
-from route_decorator import Route
-
-from Apps.CSSE.services import CSSEService, CSSESchema
-from Apps.common.services import Params
+from Apps.CSSE.services import CSSEService
 from Apps.common.utils.params import params
-from Apps.common.utils.schemaUtils import append_fields
+
+# Create your views here.
 
 route = Route('/covid')
 
