@@ -1,13 +1,19 @@
-FROM python:3.9
+# Base python image Build
+FROM python:3.9-buster AS builder
 
-RUN mkdir /covid_api_django
 WORKDIR /covid_api_django
-
-ADD requirements.txt /covid_api_django/
+COPY requirements.txt /covid_api_django/
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
+# Django application image build
+FROM builder
+WORKDIR /covid_api_django
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+
 COPY . .
+
+# Deploy
 EXPOSE 8000
 CMD ["python", "manage.py", "runserver", "8000"]
