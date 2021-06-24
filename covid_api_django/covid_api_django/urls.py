@@ -38,9 +38,9 @@ for ptrn in ptrns:
     router.register(prefix=ptrn.pattern.regex.pattern[1:-1], viewset=ptrn.callback, basename=ptrn.name)
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),
+    path('api/admin/', admin.site.urls),
 
-    path('docs/', include_docs_urls(title=API_TITLE, description=API_DESCRIPTION)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api/docs/', include_docs_urls(title=API_TITLE, description=API_DESCRIPTION)),
+    path('api/api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
