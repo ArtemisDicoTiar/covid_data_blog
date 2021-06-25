@@ -39,7 +39,7 @@ class CSSE_CasesView(viewsets.ViewSet, ):
                                   + timedelta(days=offset - 1)).date()
                                  )
                     )
-        serializer_class = CSSE_CasesSerializer(queryset, many=True)
+        serializer_class = CSSE_CasesCountrySerializer(queryset, many=True)
 
         return Response(self.csseService.get_linearised_data(serializer_class))
 
@@ -65,7 +65,7 @@ class CSSE_CasesView(viewsets.ViewSet, ):
                                   + timedelta(days=offset - 1)).date()
                                  )
                     )
-        serializer_class = CSSE_Cases_predictionSerializer(queryset, many=True)
+        serializer_class = CSSE_Cases_predictionCountrySerializer(queryset, many=True)
 
         return Response(self.csseService.get_linearised_data(serializer_class))
 
@@ -85,7 +85,7 @@ class CSSE_CasesView(viewsets.ViewSet, ):
                                         + timedelta(days=offset - 1)).date()
                                        )
                     )
-        serializer_class = CSSE_Cases_prediction_accuracySerializer(queryset, many=True)
+        serializer_class = CSSE_Cases_prediction_accuracyCountrySerializer(queryset, many=True)
 
         return Response(self.csseService.get_linearised_data(serializer_class))
 

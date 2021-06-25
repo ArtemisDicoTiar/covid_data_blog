@@ -1,5 +1,6 @@
 from datetime import date, datetime, timedelta
 
+import coreapi
 from django.db.models import Sum, Count, Avg
 
 from Apps.CSSE.models import *
@@ -62,7 +63,6 @@ class CSSEService(BaseService):
                         )
 
     @staticmethod
-
     def get_linearised_data(serialiser):
         dropped_keys = []
         single_keys = ['CountryCode', 'ContinentName']
@@ -102,4 +102,3 @@ class CSSESchema(AutoSchema):
                 ),
             ]
         return self.manual_fields + custom_fields
-
