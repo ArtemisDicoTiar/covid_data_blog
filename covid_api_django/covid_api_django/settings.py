@@ -145,5 +145,5 @@ USE_TZ = True
 
 STATIC_URL = '/api/static/'
 
-STATIC_ROOT = './web/static'
+STATIC_ROOT = './web/api/static'
 # USE_X_FORWARDED_HOST = True
