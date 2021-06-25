@@ -7,7 +7,7 @@ from django.db import models
 
 # Create your models here.
 class CSSE_Cases(models.Model):
-    CountryCode = models.TextField(primary_key=True)
+    CountryCode = models.TextField()
     ContinentName = models.TextField()
     SubdivisionCode = models.TextField()
     date = models.DateField()
@@ -24,7 +24,7 @@ class CSSE_Cases(models.Model):
 
 class CSSE_Cases_prediction(models.Model):
     predicted = models.DateField()
-    CountryCode = models.TextField(primary_key=True)
+    CountryCode = models.TextField()
     ContinentName = models.TextField()
     date = models.DateField()
     confirmed_prediction = models.BigIntegerField()
@@ -37,7 +37,7 @@ class CSSE_Cases_prediction(models.Model):
 
 class CSSE_Cases_prediction_accuracy(models.Model):
     calculated = models.DateField()
-    CountryCode = models.TextField(primary_key=True)
+    CountryCode = models.TextField()
     ContinentName = models.TextField()
     yesterday_accuracy = models.FloatField()
     lastweek_accuracy = models.FloatField()

@@ -1,11 +1,12 @@
-import datetime
+from datetime import date, datetime, timedelta
 
-import coreapi
-import coreschema
-# from django_rest_params.decorators import params
+from django.db.models import Sum, Count, Avg
 
+from Apps.CSSE.models import *
 from Apps.common.services import Params, BaseService
 from rest_framework.schemas import ManualSchema, AutoSchema
+
+from Apps.common.utils.GeoInfoConvertor import get_country_official_name
 
 
 class CSSEService(BaseService):
@@ -35,7 +36,33 @@ class CSSEService(BaseService):
         super(CSSEService, self).__init__(params=self.params, methods=self.methods)
         self.schema = CSSESchema(self.fields)
 
+    def get_queryset(self, *args, **kwargs):
+        startDate = kwargs['calculatedOn']
+
+        if kwargs['regionType'] == 'country':
+            return CSSE_Cases_prediction_accuracy.objects \
+                .values('calculated',
+                        'CountryCode',
+                        'ContinentName',
+                        'yesterday_accuracy',
+                        'lastweek_accuracy',
+                        ) \
+                .filter(CountryCode=kwargs['regionName'],
+                        calculated=startDate,
+                        )
+        elif kwargs['regionType'] == 'continent':
+            return CSSE_Cases_prediction_accuracy.objects \
+                .values('calculated',
+                        'ContinentName',
+                        ) \
+                .annotate(yesterday_accuracy=Avg('yesterday_accuracy'),
+                          lastweek_accuracy=Avg('lastweek_accuracy')) \
+                .filter(ContinentName=kwargs['regionName'].capitalize(),
+                        calculated=startDate,
+                        )
+
     @staticmethod
+
     def get_linearised_data(serialiser):
         dropped_keys = []
         single_keys = ['CountryCode', 'ContinentName']
@@ -75,3 +102,4 @@ class CSSESchema(AutoSchema):
                 ),
             ]
         return self.manual_fields + custom_fields
+

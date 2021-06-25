@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 import coreapi
 import coreschema
+
 from rest_framework.schemas import ManualSchema, AutoSchema
 
 
@@ -55,3 +56,4 @@ class BaseService:
             self.methods[idx] = method.lower()
 
         self.schema = AutoSchema(manual_fields=self.fields)
+
