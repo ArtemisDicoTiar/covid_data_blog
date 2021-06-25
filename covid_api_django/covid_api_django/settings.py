@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = secrets_app.DJANGO_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = not secrets_app.IS_PUBLISH_SERVER
 
 ALLOWED_HOSTS = ['*']
 
@@ -42,8 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # Libraries
-    'django_filters',
-    'django_rest_params',
+    # 'django_filters',
 
     # APPs
     'covid_global',
@@ -60,7 +59,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware'
+    'django.contrib.sessions.middleware.SessionMiddleware',
+
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'covid_api_django.urls'
@@ -134,7 +135,7 @@ REST_FRAMEWORK = {
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-uk'
 
 TIME_ZONE = 'UTC'
 
@@ -147,4 +148,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/api/static/'
+
+STATIC_ROOT = BASE_DIR / 'static/api/static'
+
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static/api/static'),
+# )

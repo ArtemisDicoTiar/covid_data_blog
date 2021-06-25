@@ -1,33 +1,20 @@
-FROM python:3.7
+# Base python image Build
+FROM python:3.9-buster AS builder
 
-ENV PYTHONUNBUFFERED 1
-
-RUN mkdir /covid_api_django
 WORKDIR /covid_api_django
-
-ADD requirements.txt /covid_api_django/
+COPY requirements.txt /covid_api_django/
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-ADD . /covid_api_django/
+# Django application image build
+FROM builder AS deployer
+WORKDIR /covid_api_django
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 
-#FROM python:3.7
-#
-#ENV PYTHONUNBUFFERED 1
-#
-#RUN mkdir /covid_api_django
-#WORKDIR /covid_api_django
-#
-#ADD requirements.txt /covid_api_django/
-#
-#RUN pip install virtualenv
-#RUN virtualenv covid_api_django
-#
-#WORKDIR ./covid_api_django
-#RUN /bin/bash -c "source ./bin/activate"
-#
-#RUN pip install --upgrade pip
-#RUN pip install -r ../requirements.txt
-#
-#ADD . /covid_api_django/
+COPY . .
+
+# Deploy
+EXPOSE 8000
+RUN python manage.py migrate && python manage.py collectstatic --noinput
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

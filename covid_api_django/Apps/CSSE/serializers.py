@@ -7,7 +7,7 @@ class CSSE_CasesCountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = CSSE_Cases
         fields = [
-            'CountryCode',
+            # 'CountryCode',
             'ContinentName',
             # 'SubdivisionCode',
             'date',
@@ -39,7 +39,9 @@ class CSSE_Cases_predictionCountrySerializer(serializers.ModelSerializer):
         model = CSSE_Cases_prediction
         fields = [
             'predicted',
-            'CountryCode',
+
+            # 'CountryCode',
+          
             'ContinentName',
             'date',
             'confirmed_prediction',
@@ -80,3 +82,4 @@ class CSSE_Cases_prediction_accuracyContinentSerializer(serializers.ModelSeriali
             'yesterday_accuracy',
             'lastweek_accuracy',
         ]
+
