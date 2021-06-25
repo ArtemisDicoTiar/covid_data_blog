@@ -59,7 +59,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware'
+    'django.contrib.sessions.middleware.SessionMiddleware',
+
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'covid_api_django.urls'
@@ -148,8 +150,8 @@ USE_TZ = True
 
 STATIC_URL = '/api/static/'
 
-STATIC_ROOT = '/api/static'
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static/api/static'),
-)
+# # STATIC_ROOT = '/api/static'
+#
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static/api/static'),
+# )
