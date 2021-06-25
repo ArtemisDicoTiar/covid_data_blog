@@ -37,31 +37,6 @@ class CSSEService(BaseService):
         super(CSSEService, self).__init__(params=self.params, methods=self.methods)
         self.schema = CSSESchema(self.fields)
 
-    def get_queryset(self, *args, **kwargs):
-        startDate = kwargs['calculatedOn']
-
-        if kwargs['regionType'] == 'country':
-            return CSSE_Cases_prediction_accuracy.objects \
-                .values('calculated',
-                        'CountryCode',
-                        'ContinentName',
-                        'yesterday_accuracy',
-                        'lastweek_accuracy',
-                        ) \
-                .filter(CountryCode=kwargs['regionName'],
-                        calculated=startDate,
-                        )
-        elif kwargs['regionType'] == 'continent':
-            return CSSE_Cases_prediction_accuracy.objects \
-                .values('calculated',
-                        'ContinentName',
-                        ) \
-                .annotate(yesterday_accuracy=Avg('yesterday_accuracy'),
-                          lastweek_accuracy=Avg('lastweek_accuracy')) \
-                .filter(ContinentName=kwargs['regionName'].capitalize(),
-                        calculated=startDate,
-                        )
-
     @staticmethod
     def get_linearised_data(serialiser):
         dropped_keys = []

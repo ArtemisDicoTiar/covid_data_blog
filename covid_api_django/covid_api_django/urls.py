@@ -22,6 +22,7 @@ from rest_framework.routers import DefaultRouter
 
 from Apps.CSSE import views as CSSE_views
 from Apps.UK import views as UK_views
+from Apps.Google import views as GoogleMobility_views
 from covid_global import views as covid_global_views
 from covid_info import views as covid_info_views
 
@@ -32,7 +33,8 @@ API_DESCRIPTION = 'This API provides COVID-19 related data.'
 router = DefaultRouter()
 
 ptrns = CSSE_views.route.patterns \
-        + UK_views.route.patterns
+        + UK_views.route.patterns \
+        + GoogleMobility_views.route.patterns
 
 for ptrn in ptrns:
     router.register(prefix=ptrn.pattern.regex.pattern[1:-1], viewset=ptrn.callback, basename=ptrn.name)

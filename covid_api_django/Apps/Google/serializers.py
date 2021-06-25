@@ -1,46 +1,7 @@
 from rest_framework import serializers
+
+from Apps.Google.models import Google_Mobility
 from covid_info.models import *
-
-
-class COVID_CasesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = COVID_Cases
-        fields = [
-            # 'CountryCode',
-            # 'ContinentName',
-            # 'SubdivisionCode',
-            'date',
-            'confirmed',
-            'deaths',
-            'recovered',
-            'removed',
-            'active',
-        ]
-
-
-class COVID_Cases_predictionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = COVID_Cases_prediction
-        fields = [
-            'predicted',
-            # 'CountryCode',
-            # 'ContinentName',
-            'date',
-            'confirmed_prediction',
-            'deaths_prediction',
-        ]
-
-
-class COVID_Cases_prediction_accuracySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = COVID_Cases_prediction_accuracy
-        fields = [
-            'calculated',
-            # 'CountryCode',
-            # 'ContinentName',
-            'yesterday_accuracy',
-            'lastweek_accuracy',
-        ]
 
 
 class Google_MobilitySerializer(serializers.ModelSerializer):
@@ -48,7 +9,7 @@ class Google_MobilitySerializer(serializers.ModelSerializer):
         model = Google_Mobility
         fields = [
             'CountryName',
-            'CountryCode',
+            # 'CountryCode',
             'date',
             'retail_and_recreation_percent_change_from_baseline',
             'grocery_and_pharmacy_percent_change_from_baseline',
@@ -56,143 +17,4 @@ class Google_MobilitySerializer(serializers.ModelSerializer):
             'transit_stations_percent_change_from_baseline',
             'workplaces_percent_change_from_baseline',
             'residential_percent_change_from_baseline',
-        ]
-
-
-class OWID_healthSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OWID_health
-        fields = [
-            'iso_code',
-            'continent',
-            'date',
-            'total_cases',
-            'new_cases',
-            'new_cases_smoothed',
-            'total_deaths',
-            'new_deaths',
-            'new_deaths_smoothed',
-            'total_cases_per_million',
-            'new_cases_per_million',
-            'new_cases_smoothed_per_million',
-            'total_deaths_per_million',
-            'new_deaths_per_million',
-            'new_deaths_smoothed_per_million',
-            'reproduction_rate',
-            'icu_patients',
-            'icu_patients_per_million',
-            'hosp_patients',
-            'hosp_patients_per_million',
-            'weekly_icu_admissions',
-            'weekly_icu_admissions_per_million',
-            'weekly_hosp_admissions',
-            'weekly_hosp_admissions_per_million',
-            'total_tests',
-            'new_tests',
-            'total_tests_per_thousand',
-            'new_tests_per_thousand',
-            'new_tests_smoothed',
-            'new_tests_smoothed_per_thousand',
-            'tests_per_case',
-            'positive_rate',
-            'tests_units',
-            'stringency_index',
-            'population',
-            'population_density',
-            'median_age',
-            'aged_65_older',
-            'aged_70_older',
-            'gdp_per_capita',
-            'extreme_poverty',
-            'cardiovasc_death_rate',
-            'diabetes_prevalence',
-            'female_smokers',
-            'male_smokers',
-            'handwashing_facilities',
-            'hospital_beds_per_thousand',
-            'life_expectancy',
-            'human_development_index',
-        ]
-
-
-class OWID_mortalitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OWID_mortality
-        fields = [
-            # 'iso_code',
-            'date',
-            'p_scores_all_ages',
-            'p_scores_15_64',
-            'p_scores_65_74',
-            'p_scores_75_84',
-            'p_scores_85plus',
-            'deaths_2020_all_ages',
-            'average_deaths_2015_2019_all_ages',
-            'deaths_2015_all_ages',
-            'deaths_2016_all_ages',
-            'deaths_2017_all_ages',
-            'deaths_2018_all_ages',
-            'deaths_2019_all_ages',
-            'deaths_2010_all_ages',
-            'deaths_2011_all_ages',
-            'deaths_2012_all_ages',
-            'deaths_2013_all_ages',
-            'deaths_2014_all_ages',
-            'deaths_2021_all_ages',
-        ]
-
-
-class OWID_testing_dataSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OWID_testing_data
-        fields = [
-
-        ]
-
-
-class OWID_testing_metaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OWID_testing_meta
-        fields = [
-
-        ]
-
-
-class OWID_vaccination_dataSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OWID_vaccination_data
-        fields = [
-
-        ]
-
-
-class OWID_vaccination_metaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OWID_vaccination_meta
-        fields = [
-
-        ]
-
-
-class UK_CasesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UK_Cases
-        fields = [
-
-        ]
-
-
-class UK_Cases_predictionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UK_Cases_prediction
-        fields = [
-
-        ]
-
-
-class UK_Cases_prediction_accuracySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UK_Cases_prediction_accuracy
-        fields = [
-
         ]
