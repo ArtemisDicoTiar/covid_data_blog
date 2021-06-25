@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     # REST API framework
     'rest_framework',
 
+    # Libraries
+    'django_filters',
+
     # APPs
     'covid_global',
     'covid_info',
@@ -145,5 +148,8 @@ USE_TZ = True
 
 STATIC_URL = '/api/static/'
 
-STATIC_ROOT = './web/api/static'
-# USE_X_FORWARDED_HOST = True
+# STATIC_ROOT = '/api/static'
+SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
+STATICFILES_DIRS = (
+  os.path.join(SITE_ROOT, 'web/static/'),
+)
