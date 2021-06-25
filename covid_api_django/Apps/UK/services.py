@@ -13,10 +13,10 @@ class UKService(BaseService):
         self.params = [
             Params(name='regionCode', dtype=str, required=True,
                    location='query', description="UK region code"),
-            Params(name='offset', dtype=int, required=True,
-                   location='query', description="The number of dates from startDate."),
             Params(name='startDate', dtype=str, required=True,
                    location='query', description="Query start date (format: %Y-%m-%d)"),
+            Params(name='offset', dtype=int, required=True,
+                   location='query', description="The number of dates from startDate."),
         ]
         self.methods = ['get']
 
