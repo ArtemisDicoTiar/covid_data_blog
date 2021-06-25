@@ -8,7 +8,7 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Django application image build
-FROM builder
+FROM builder AS deployer
 WORKDIR /covid_api_django
 COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 
@@ -16,4 +16,5 @@ COPY . .
 
 # Deploy
 EXPOSE 8000
-CMD ["python", "manage.py", "runserver", "8000"]
+CMD ["python", "manage.py", "migrate"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
