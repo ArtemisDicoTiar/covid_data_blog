@@ -150,4 +150,6 @@ STATIC_URL = '/api/static/'
 
 STATIC_ROOT = '/api/static'
 
-STATICFILES_DIRS = os.path.join(BASE_DIR, 'static/api/static')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static/api/static'),
+)
