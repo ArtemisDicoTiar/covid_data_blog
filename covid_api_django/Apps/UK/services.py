@@ -52,7 +52,7 @@ class UKSchema(AutoSchema):
     def get_manual_fields(self, path, method):
         super().get_manual_fields(path, method)
         custom_fields = []
-        if path.lower() == "/covid/uk/prediction/":
+        if path.lower() == "/api/covid/uk/prediction/":
             predDate_params = Params(name='predictedDate', dtype=str, required=True,
                                      location='query', description="Target predicted date (format: %Y-%m-%d)")
             custom_fields = [
