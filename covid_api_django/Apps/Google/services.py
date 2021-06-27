@@ -1,17 +1,13 @@
-from datetime import date, datetime, timedelta
+from rest_framework.schemas import AutoSchema
 
-import coreapi
-from django.db.models import Sum, Count, Avg
-
-from Apps.CSSE.models import *
 from Apps.common.services import Params, BaseService
-from rest_framework.schemas import ManualSchema, AutoSchema
-
-from Apps.common.utils.GeoInfoConvertor import get_country_official_name
 
 
 class GoogleMobility_Service(BaseService):
     def __init__(self):
+        self.dropped_keys = []
+        self.single_keys = ['CountryName', 'CountryCode']
+
         self.params = [
             Params(name='regionCode', dtype=str, required=True,
                    location='query', description="Country code (ISO3)"),
@@ -35,25 +31,9 @@ class GoogleMobility_Service(BaseService):
         ]
         self.methods = ['get']
 
-        super(GoogleMobility_Service, self).__init__(params=self.params, methods=self.methods)
+        super(GoogleMobility_Service, self).__init__(params=self.params, methods=self.methods,
+                                                     dropped_keys=self.dropped_keys, single_keys=self.single_keys)
         self.schema = GoogleMobility_Schema(self.fields)
-
-    @staticmethod
-    def get_linearised_data(serialiser):
-        dropped_keys = []
-        single_keys = ['CountryName', 'CountryCode']
-        return dict(
-            map(lambda key: (
-                (key, map(lambda row_data: row_data[key], serialiser.data))
-                if key not in dropped_keys and key not in single_keys
-                else (
-                    (key, serialiser.data[0][key])
-                    if key in single_keys
-                    else None
-                )
-            ),
-                serialiser.child.fields)
-        )
 
 
 class GoogleMobility_Schema(AutoSchema):

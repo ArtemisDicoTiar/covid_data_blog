@@ -1,15 +1,15 @@
-import datetime
-
 import coreapi
-import coreschema
+from rest_framework.schemas import AutoSchema
 
 from Apps.common.services import Params, BaseService
-from rest_framework.schemas import ManualSchema, AutoSchema
 
 
 class UKService(BaseService):
 
     def __init__(self):
+        self.dropped_keys = []
+        self.single_keys = ['code', 'name', 'areaType']
+
         self.params = [
             Params(name='regionCode', dtype=str, required=True,
                    location='query', description="UK region code"),
@@ -20,26 +20,10 @@ class UKService(BaseService):
         ]
         self.methods = ['get']
 
-        super(UKService, self).__init__(params=self.params, methods=self.methods)
+        super(UKService, self).__init__(params=self.params, methods=self.methods,
+                                        dropped_keys=self.dropped_keys, single_keys=self.single_keys)
 
         self.schema = UKSchema(self.fields)
-
-    @staticmethod
-    def get_linearised_data(serialiser):
-        dropped_keys = []
-        single_keys = ['code', 'name', 'areaType']
-        return dict(
-            map(lambda key: (
-                (key, map(lambda row_data: row_data[key], serialiser.data))
-                if key not in dropped_keys and key not in single_keys
-                else (
-                    (key, serialiser.data[0][key])
-                    if key in single_keys
-                    else None
-                )
-            ),
-                serialiser.child.fields)
-        )
 
 
 class UKSchema(AutoSchema):

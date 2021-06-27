@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from Apps.UK.models import *
 
 
@@ -25,8 +26,8 @@ class UK_CasesSerializer(serializers.ModelSerializer):
             'confirmedDaily',
             'confirmedCumulative',
 
-            'deathsDaily',
-            'deathsCumulative',
+            # 'deathsDaily',
+            # 'deathsCumulative',
 
             'newDeaths28DaysByPublishDate',
             'cumDeaths28DaysByPublishDate',

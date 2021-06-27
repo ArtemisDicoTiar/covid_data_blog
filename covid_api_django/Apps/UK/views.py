@@ -2,7 +2,6 @@ from datetime import timedelta, datetime
 
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.response import Response
 from route_decorator import Route
 
 from Apps.UK.serializers import *
@@ -39,7 +38,7 @@ class UK_CasesView(viewsets.ViewSet, ):
                     )
         serializer_class = UK_CasesSerializer(queryset, many=True)
 
-        return Response(self.UKService.get_linearised_data(serializer_class))
+        return self.UKService.get_linearised_data(serializer_class)
 
     @action(methods=UKService.methods, detail=False)
     @params(regionCode=str,
@@ -65,7 +64,7 @@ class UK_CasesView(viewsets.ViewSet, ):
                     )
         serializer_class = UK_Cases_predictionSerializer(queryset, many=True)
 
-        return Response(self.UKService.get_linearised_data(serializer_class))
+        return self.UKService.get_linearised_data(serializer_class)
 
     @action(methods=UKService.methods, detail=False)
     @params(regionCode=str,
@@ -85,5 +84,5 @@ class UK_CasesView(viewsets.ViewSet, ):
                     )
         serializer_class = UK_Cases_prediction_accuracySerializer(queryset, many=True)
 
-        return Response(self.UKService.get_linearised_data(serializer_class))
+        return self.UKService.get_linearised_data(serializer_class)
 

@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from Apps.Google.models import Google_Mobility
-from covid_info.models import *
 
 
 class Google_MobilitySerializer(serializers.ModelSerializer):

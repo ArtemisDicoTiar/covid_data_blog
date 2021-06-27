@@ -1,17 +1,14 @@
-from datetime import date, datetime, timedelta
-
 import coreapi
-from django.db.models import Sum, Count, Avg
+from rest_framework.schemas import AutoSchema
 
-from Apps.CSSE.models import *
 from Apps.common.services import Params, BaseService
-from rest_framework.schemas import ManualSchema, AutoSchema
-
-from Apps.common.utils.GeoInfoConvertor import get_country_official_name
 
 
 class CSSEService(BaseService):
     def __init__(self, filterRegion):
+        self.dropped_keys = []
+        self.single_keys = ['CountryCode', 'ContinentName']
+
         self.params = [
             Params(name='offset', dtype=int, required=True,
                    location='query', description="The number of dates from startDate."),
@@ -34,25 +31,9 @@ class CSSEService(BaseService):
 
         self.params = self.params[::-1]
 
-        super(CSSEService, self).__init__(params=self.params, methods=self.methods)
+        super(CSSEService, self).__init__(params=self.params, methods=self.methods,
+                                          dropped_keys=self.dropped_keys, single_keys=self.single_keys)
         self.schema = CSSESchema(self.fields)
-
-    @staticmethod
-    def get_linearised_data(serialiser):
-        dropped_keys = []
-        single_keys = ['CountryCode', 'ContinentName']
-        return dict(
-            map(lambda key: (
-                (key, map(lambda row_data: row_data[key], serialiser.data))
-                if key not in dropped_keys and key not in single_keys
-                else (
-                    (key, serialiser.data[0][key])
-                    if key in single_keys
-                    else None
-                )
-            ),
-                serialiser.child.fields)
-        )
 
 
 class CSSESchema(AutoSchema):

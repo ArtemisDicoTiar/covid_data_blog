@@ -1,18 +1,13 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from rest_framework import viewsets
-
 from rest_framework.decorators import action
-
-from rest_framework.response import Response
 from route_decorator import Route
 
 from Apps.CSSE.serializers import *
-
 from Apps.CSSE.services import CSSEService
 from Apps.common.utils.filter import prediction_parameter_validate
 from Apps.common.utils.params import params
-
 
 route = Route('/covid')
 
@@ -41,7 +36,7 @@ class CSSE_CasesView(viewsets.ViewSet, ):
                     )
         serializer_class = CSSE_CasesCountrySerializer(queryset, many=True)
 
-        return Response(self.csseService.get_linearised_data(serializer_class))
+        return self.csseService.get_linearised_data(serializer_class)
 
     @action(methods=csseService.methods, detail=False)
     @params(CountryCode=str,
@@ -67,7 +62,7 @@ class CSSE_CasesView(viewsets.ViewSet, ):
                     )
         serializer_class = CSSE_Cases_predictionCountrySerializer(queryset, many=True)
 
-        return Response(self.csseService.get_linearised_data(serializer_class))
+        return self.csseService.get_linearised_data(serializer_class)
 
     @action(methods=csseService.methods, detail=False)
     @params(CountryCode=str,
@@ -87,5 +82,5 @@ class CSSE_CasesView(viewsets.ViewSet, ):
                     )
         serializer_class = CSSE_Cases_prediction_accuracyCountrySerializer(queryset, many=True)
 
-        return Response(self.csseService.get_linearised_data(serializer_class))
+        return self.csseService.get_linearised_data(serializer_class)
 
