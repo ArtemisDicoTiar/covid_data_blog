@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_framework_dataclasses.serializers import DataclassSerializer
+
 from Apps.CSSE.models import *
 
 

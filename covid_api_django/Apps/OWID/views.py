@@ -1,188 +1,129 @@
-from datetime import date, datetime, timedelta
+from datetime import timedelta, datetime
 
-from django.shortcuts import render
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from route_decorator import Route
+
+from Apps.OWID.serializers import *
+from Apps.OWID.services import *
+from Apps.common.utils.params import params
 
 # Create your views here.
-from django.db.models import Count, Sum
 
-from django_filters.rest_framework import DjangoFilterBackend
-
-from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework import generics
-from rest_framework import viewsets
-from rest_framework.decorators import api_view, action
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
-
-from Apps.common.utils.params import params
-from covid_info.serializers import *
-from covid_info.models import *
+route = Route('/owid')
 
 
-class COVID_CasesView(viewsets.ModelViewSet):
-    http_method_names = ['get']
-    queryset = COVID_Cases.objects.all()
-    serializer_class = COVID_CasesSerializer
+@route('/data', 'OWID_info')
+class OWIDDataView(viewsets.ViewSet, ):
+    service = OWIDDataService()
 
-    filterset_fields = {
-        'CountryCode': ['exact'],
-        'date': ['range', 'exact'],
-    }
+    schema = service.schema
 
-    @action(methods=['get'], detail=True)
-    @params(CountryCode=str,
+    @action(methods=service.methods, detail=False)
+    @params(regionCode=str,
             startDate=str,
             offset=int)
-    def test_function(self, request, CountryCode, startDate, offset, *args, **kwargs):
-        queryset = COVID_Cases.objects \
-            .filter(CountryCode=CountryCode,
+    def health(self, *args, **kwargs):
+        code = kwargs['regionCode']
+        startDate = kwargs['startDate']
+        offset = kwargs['offset']
+
+        queryset = OWID_health.objects \
+            .filter(iso_code=code,
                     date__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
                                  (datetime.strptime(startDate, '%Y-%m-%d')
-                                  + timedelta(days=offset-1)).date()
+                                  + timedelta(days=offset - 1)).date())
+                    )
+
+        serializer_class = OWID_healthSerializer(queryset, many=True)
+
+        return self.service.get_linearised_data(serializer_class)
+
+    @action(methods=service.methods, detail=False)
+    @params(regionCode=str,
+            startDate=str,
+            offset=int)
+    def mortality(self, *args, **kwargs):
+        code = kwargs['regionCode']
+        startDate = kwargs['startDate']
+        offset = kwargs['offset']
+
+        queryset = OWID_mortality.objects \
+            .filter(iso_code=code,
+                    date__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
+                                 (datetime.strptime(startDate, '%Y-%m-%d')
+                                  + timedelta(days=offset - 1)).date()
                                  )
                     )
-        serializer_class = COVID_CasesSerializer(queryset, many=True)
+        serializer_class = OWID_mortalitySerializer(queryset, many=True)
 
-        return Response(
-            {
-                key: [
-                    serializer_class.data[row][key]
-                    for row in range(offset)
-                ]
-                for key in serializer_class.child.fields
-            }
-        )
+        return self.service.get_linearised_data(serializer_class)
 
+    @action(methods=service.methods, detail=False)
+    @params(regionCode=str,
+            startDate=str,
+            offset=int)
+    def testing(self, *args, **kwargs):
+        code = kwargs['regionCode']
+        startDate = kwargs['startDate']
+        offset = kwargs['offset']
 
+        queryset = OWID_testing_data.objects \
+            .filter(ISO_code=code,
+                    Date__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
+                                 (datetime.strptime(startDate, '%Y-%m-%d')
+                                  + timedelta(days=offset - 1)).date()
+                                 )
+                    )
+        serializer_class = OWID_testing_dataSerializer(queryset, many=True)
 
-class COVID_Cases_predictionView(viewsets.ModelViewSet):
-    http_method_names = ['get']
-    queryset = COVID_Cases_prediction.objects.all()
-    serializer_class = COVID_Cases_predictionSerializer
+        return self.service.get_linearised_data(serializer_class)
 
-    filterset_fields = {
-        'CountryCode': ['exact'],
-        'predicted': ['range', 'exact'],
-        'date': ['range', 'exact'],
-    }
+    @action(methods=service.methods, detail=False)
+    @params(regionCode=str,
+            startDate=str,
+            offset=int)
+    def vaccination(self, *args, **kwargs):
+        code = kwargs['regionCode']
+        startDate = kwargs['startDate']
+        offset = kwargs['offset']
 
+        queryset = OWID_vaccination_data.objects \
+            .filter(iso_code__exact=code,
+                    date__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
+                                 (datetime.strptime(startDate, '%Y-%m-%d')
+                                  + timedelta(days=offset - 1)).date()
+                                 )
+                    )
+        serializer_class = OWID_vaccination_dataSerializer(queryset, many=True)
 
-class COVID_Cases_prediction_accuracyView(viewsets.ModelViewSet):
-    http_method_names = ['get']
-    queryset = COVID_Cases_prediction_accuracy.objects.all()
-    serializer_class = COVID_Cases_prediction_accuracySerializer
-
-    filterset_fields = {
-        'CountryCode': ['exact'],
-        'calculated': ['exact'],
-    }
-
-
-class Google_MobilityView(viewsets.ModelViewSet):
-    http_method_names = ['get']
-    queryset = Google_Mobility.objects.all()
-    serializer_class = Google_MobilitySerializer
-
-    filterset_fields = {
-        'CountryCode': ['exact'],
-        'date': ['range', 'exact'],
-    }
+        return self.service.get_linearised_data(serializer_class)
 
 
-class OWID_healthView(viewsets.ModelViewSet):
-    http_method_names = ['get']
-    queryset = OWID_health.objects.all()
-    serializer_class = OWID_healthSerializer
+@route('/meta', 'testing')
+class OWIDMetaView(viewsets.ViewSet, ):
+    service = OWIDMetaService()
 
-    filterset_fields = {
-        'iso_code': ['exact'],
-        'date': ['range', 'exact'],
-    }
+    schema = service.schema
 
+    @action(methods=service.methods, detail=False)
+    @params(regionCode=str)
+    def testing(self, *args, **kwargs):
+        code = kwargs['regionCode']
 
-class OWID_mortalityView(viewsets.ModelViewSet):
-    http_method_names = ['get']
-    queryset = OWID_mortality.objects.all()
-    serializer_class = OWID_mortalitySerializer
+        queryset = OWID_testing_meta.objects \
+            .filter(ISO_code__exact=code)
+        serializer_class = OWID_testing_metaSerializer(queryset, many=True)
 
-    filterset_fields = {
-        'iso_code': ['exact'],
-        'date': ['exact', 'range'],
-    }
+        return self.service.get_linearised_data(serializer_class)
 
+    @action(methods=service.methods, detail=False)
+    @params(regionCode=str)
+    def vaccination(self, *args, **kwargs):
+        code = kwargs['regionCode']
 
-class OWID_testing_dataView(viewsets.ModelViewSet):
-    http_method_names = ['get']
-    queryset = COVID_Cases_prediction_accuracy.objects.all()
-    serializer_class = COVID_Cases_prediction_accuracySerializer
+        queryset = OWID_vaccination_meta.objects \
+            .filter(iso_code__exact=code)
+        serializer_class = OWID_vaccination_metaSerializer(queryset, many=True)
 
-    filterset_fields = {
-        # 'CountryCode': ['exact'],
-        # 'calculated': ['exact'],
-    }
-
-
-class OWID_testing_metaView(viewsets.ModelViewSet):
-    http_method_names = ['get']
-    queryset = COVID_Cases_prediction_accuracy.objects.all()
-    serializer_class = COVID_Cases_prediction_accuracySerializer
-
-    filterset_fields = {
-        # 'CountryCode': ['exact'],
-        # 'calculated': ['exact'],
-    }
-
-
-class OWID_vaccination_dataView(viewsets.ModelViewSet):
-    http_method_names = ['get']
-    queryset = COVID_Cases_prediction_accuracy.objects.all()
-    serializer_class = COVID_Cases_prediction_accuracySerializer
-
-    filterset_fields = {
-        # 'CountryCode': ['exact'],
-        # 'calculated': ['exact'],
-    }
-
-
-class OWID_vaccination_metaView(viewsets.ModelViewSet):
-    http_method_names = ['get']
-    queryset = COVID_Cases_prediction_accuracy.objects.all()
-    serializer_class = COVID_Cases_prediction_accuracySerializer
-
-    filterset_fields = {
-        # 'CountryCode': ['exact'],
-        # 'calculated': ['exact'],
-    }
-
-
-class UK_CasesView(viewsets.ModelViewSet):
-    http_method_names = ['get']
-    queryset = COVID_Cases_prediction_accuracy.objects.all()
-    serializer_class = COVID_Cases_prediction_accuracySerializer
-
-    filterset_fields = {
-        # 'CountryCode': ['exact'],
-        # 'calculated': ['exact'],
-    }
-
-
-class UK_Cases_predictionView(viewsets.ModelViewSet):
-    http_method_names = ['get']
-    queryset = COVID_Cases_prediction_accuracy.objects.all()
-    serializer_class = COVID_Cases_prediction_accuracySerializer
-
-    filterset_fields = {
-        # 'CountryCode': ['exact'],
-        # 'calculated': ['exact'],
-    }
-
-
-class UK_Cases_prediction_accuracyView(viewsets.ModelViewSet):
-    http_method_names = ['get']
-    queryset = COVID_Cases_prediction_accuracy.objects.all()
-    serializer_class = COVID_Cases_prediction_accuracySerializer
-
-    filterset_fields = {
-        # 'CountryCode': ['exact'],
-        # 'calculated': ['exact'],
-    }
+        return self.service.get_linearised_data(serializer_class)

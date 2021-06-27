@@ -22,8 +22,8 @@ class UK_Cases(models.Model):
     confirmedDaily = models.FloatField()
     confirmedCumulative = models.FloatField()
 
-    deathsDaily = models.FloatField()
-    deathsCumulative = models.FloatField()
+    # deathsDaily = models.FloatField()
+    # deathsCumulative = models.FloatField()
 
     newDeaths28DaysByPublishDate = models.FloatField()
     cumDeaths28DaysByPublishDate = models.FloatField()
@@ -46,7 +46,7 @@ class UK_Cases_prediction(models.Model):
     name = models.TextField()
 
     confirmed_prediction = models.BigIntegerField()
-    deaths_prediction = models.BigIntegerField()
+    # deaths_prediction = models.BigIntegerField()
 
     class Meta:
         app_label = 'covid_info'

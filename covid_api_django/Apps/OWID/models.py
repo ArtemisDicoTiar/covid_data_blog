@@ -1,65 +1,6 @@
 from django.db import models
 
 
-# Create your models here.
-class COVID_Cases(models.Model):
-    CountryCode = models.TextField(primary_key=True)
-    ContinentName = models.TextField()
-    SubdivisionCode = models.TextField()
-    date = models.DateField()
-    confirmed = models.FloatField()
-    deaths = models.FloatField()
-    recovered = models.FloatField()
-    removed = models.FloatField()
-    active = models.FloatField()
-
-    class Meta:
-        app_label = 'covid_info'
-        db_table = 'COVID_Cases'
-
-
-class COVID_Cases_prediction(models.Model):
-    predicted = models.DateField()
-    CountryCode = models.TextField(primary_key=True)
-    ContinentName = models.TextField()
-    date = models.DateField()
-    confirmed_prediction = models.BigIntegerField()
-    deaths_prediction = models.BigIntegerField()
-
-    class Meta:
-        app_label = 'covid_info'
-        db_table = 'COVID_Cases_prediction'
-
-
-class COVID_Cases_prediction_accuracy(models.Model):
-    calculated = models.DateField()
-    CountryCode = models.TextField(primary_key=True)
-    ContinentName = models.TextField()
-    yesterday_accuracy = models.FloatField()
-    lastweek_accuracy = models.FloatField()
-
-    class Meta:
-        app_label = 'covid_info'
-        db_table = 'COVID_Cases_prediction_accuracy'
-
-
-class Google_Mobility(models.Model):
-    CountryName = models.TextField()
-    CountryCode = models.TextField(primary_key=True)
-    date = models.DateField()
-
-    retail_and_recreation_percent_change_from_baseline = models.FloatField()
-    grocery_and_pharmacy_percent_change_from_baseline = models.FloatField()
-    parks_percent_change_from_baseline = models.FloatField()
-    transit_stations_percent_change_from_baseline = models.FloatField()
-    workplaces_percent_change_from_baseline = models.FloatField()
-    residential_percent_change_from_baseline = models.FloatField()
-
-    class Meta:
-        app_label = 'covid_info'
-        db_table = 'Google_Mobility'
-
-
 class OWID_health(models.Model):
     iso_code = models.TextField(primary_key=True)
     continent = models.TextField()
@@ -144,42 +85,76 @@ class OWID_mortality(models.Model):
 
 
 class OWID_testing_data(models.Model):
+    index = models.BigIntegerField(db_column='index')
+    ISO_code = models.TextField(db_column='ISO code', primary_key=True)
+    Date = models.TextField()
+    Daily_change_in_cumulative_total = models.FloatField(db_column='Daily change in cumulative total')
+    Cumulative_total = models.FloatField(db_column='Cumulative total')
+    Cumulative_total_per_thousand = models.FloatField(db_column='Cumulative total per thousand')
+    Daily_change_in_cumulative_total_per_thousand = models.FloatField(db_column='Daily change in cumulative total per thousand')
+    seven_day_smoothed_daily_change = models.FloatField(db_column='7-day smoothed daily change')
+    seven_day_smoothed_daily_change_per_thousand = models.FloatField(db_column='7-day smoothed daily change per thousand')
+    Short_term_positive_rate = models.FloatField(db_column='Short-term positive rate')
+    Short_term_tests_per_case = models.FloatField(db_column='Short-term tests per case')
+
     class Meta:
         app_label = 'covid_info'
         db_table = 'OWID_testing_data'
 
 
 class OWID_testing_meta(models.Model):
+    index = models.BigIntegerField(db_column='index')
+    ISO_code = models.TextField(db_column='ISO code', primary_key=True)
+    Date = models.TextField()
+    Entity = models.TextField()
+    Source_URL = models.TextField(db_column='Source URL')
+    Source_label = models.TextField(db_column='Source label')
+    Number_of_observations = models.FloatField(db_column='Number of observations')
+    Cumulative_total = models.FloatField(db_column='Cumulative total')
+    Cumulative_total_per_thousand = models.FloatField(db_column='Cumulative total per thousand')
+    Daily_change_in_cumulative_total = models.FloatField(db_column='Daily change in cumulative total')
+    Daily_change_in_cumulative_total_per_thousand = models.FloatField(db_column='Daily change in cumulative total per thousand')
+    seven_day_smoothed_daily_change = models.FloatField(db_column='7-day smoothed daily change')
+    seven_day_smoothed_daily_change_per_thousand = models.FloatField(db_column='7-day smoothed daily change per thousand')
+    Short_term_positive_rate = models.FloatField(db_column='Short-term positive rate')
+    Short_term_tests_per_case = models.FloatField(db_column='Short-term tests per case')
+    General_source_label = models.TextField(db_column='General source label')
+    General_source_URL = models.TextField(db_column='General source URL')
+    Short_description = models.TextField(db_column='Short description')
+    Detailed_description = models.TextField(db_column='Detailed description')
+
     class Meta:
         app_label = 'covid_info'
         db_table = 'OWID_testing_meta'
 
 
 class OWID_vaccination_data(models.Model):
+    location = models.TextField()
+    iso_code = models.TextField(primary_key=True)
+    date = models.TextField()
+    total_vaccinations = models.FloatField()
+    people_vaccinated = models.FloatField()
+    people_fully_vaccinated = models.FloatField()
+    daily_vaccinations_raw = models.FloatField()
+    daily_vaccinations = models.FloatField()
+    total_vaccinations_per_hundred = models.FloatField()
+    people_vaccinated_per_hundred = models.FloatField()
+    people_fully_vaccinated_per_hundred = models.FloatField()
+    daily_vaccinations_per_million = models.FloatField()
+
     class Meta:
         app_label = 'covid_info'
         db_table = 'OWID_vaccination_data'
 
 
 class OWID_vaccination_meta(models.Model):
+    iso_code = models.TextField(primary_key=True)
+    location = models.TextField()
+    vaccines = models.TextField()
+    last_observation_date = models.TextField()
+    source_name = models.TextField()
+    source_website = models.TextField()
+
     class Meta:
         app_label = 'covid_info'
         db_table = 'OWID_vaccination_meta'
-
-
-class UK_Cases(models.Model):
-    class Meta:
-        app_label = 'covid_info'
-        db_table = 'UK_Cases'
-
-
-class UK_Cases_prediction(models.Model):
-    class Meta:
-        app_label = 'covid_info'
-        db_table = 'UK_Cases_prediction'
-
-
-class UK_Cases_prediction_accuracy(models.Model):
-    class Meta:
-        app_label = 'covid_info'
-        db_table = 'UK_Cases_prediction_accuracy'

@@ -1,7 +1,3 @@
-import typing
-from dataclasses import dataclass
-from datetime import datetime
-
 from django.db import models
 
 

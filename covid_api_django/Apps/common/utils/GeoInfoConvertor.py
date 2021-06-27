@@ -1,9 +1,9 @@
 import difflib
 import logging
+import warnings
 
 import country_converter as coco
 import pycountry as pc
-import warnings
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 logging.getLogger('coco').setLevel(logging.WARNING)

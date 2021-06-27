@@ -1,17 +1,13 @@
 from datetime import timedelta, datetime
 
 from rest_framework import viewsets
-
 from rest_framework.decorators import action
-
-from rest_framework.response import Response
 from route_decorator import Route
 
 from Apps.Google.models import Google_Mobility
 from Apps.Google.serializers import Google_MobilitySerializer
 from Apps.Google.services import GoogleMobility_Service
 from Apps.common.utils.params import params
-
 
 route = Route('/google')
 
@@ -41,5 +37,5 @@ class GoogleMobility_View(viewsets.ViewSet, ):
 
         serializer_class = Google_MobilitySerializer(queryset, many=True)
 
-        return Response(self.service.get_linearised_data(serializer_class))
+        return self.service.get_linearised_data(serializer_class)
 

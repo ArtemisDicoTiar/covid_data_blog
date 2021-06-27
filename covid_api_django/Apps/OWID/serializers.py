@@ -1,69 +1,13 @@
 from rest_framework import serializers
-from covid_info.models import *
 
-
-class COVID_CasesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = COVID_Cases
-        fields = [
-            # 'CountryCode',
-            # 'ContinentName',
-            # 'SubdivisionCode',
-            'date',
-            'confirmed',
-            'deaths',
-            'recovered',
-            'removed',
-            'active',
-        ]
-
-
-class COVID_Cases_predictionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = COVID_Cases_prediction
-        fields = [
-            'predicted',
-            # 'CountryCode',
-            # 'ContinentName',
-            'date',
-            'confirmed_prediction',
-            'deaths_prediction',
-        ]
-
-
-class COVID_Cases_prediction_accuracySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = COVID_Cases_prediction_accuracy
-        fields = [
-            'calculated',
-            # 'CountryCode',
-            # 'ContinentName',
-            'yesterday_accuracy',
-            'lastweek_accuracy',
-        ]
-
-
-class Google_MobilitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Google_Mobility
-        fields = [
-            'CountryName',
-            'CountryCode',
-            'date',
-            'retail_and_recreation_percent_change_from_baseline',
-            'grocery_and_pharmacy_percent_change_from_baseline',
-            'parks_percent_change_from_baseline',
-            'transit_stations_percent_change_from_baseline',
-            'workplaces_percent_change_from_baseline',
-            'residential_percent_change_from_baseline',
-        ]
+from Apps.OWID.models import *
 
 
 class OWID_healthSerializer(serializers.ModelSerializer):
     class Meta:
         model = OWID_health
         fields = [
-            'iso_code',
+            # 'iso_code',
             'continent',
             'date',
             'total_cases',
@@ -146,7 +90,17 @@ class OWID_testing_dataSerializer(serializers.ModelSerializer):
     class Meta:
         model = OWID_testing_data
         fields = [
-
+            # 'index',
+            # 'ISO_code',
+            'Date',
+            'Daily_change_in_cumulative_total',
+            'Cumulative_total',
+            'Cumulative_total_per_thousand',
+            'Daily_change_in_cumulative_total_per_thousand',
+            'seven_day_smoothed_daily_change',
+            'seven_day_smoothed_daily_change_per_thousand',
+            'Short_term_positive_rate',
+            'Short_term_tests_per_case',
         ]
 
 
@@ -154,7 +108,24 @@ class OWID_testing_metaSerializer(serializers.ModelSerializer):
     class Meta:
         model = OWID_testing_meta
         fields = [
-
+            # 'ISO_code',
+            'Date',
+            'Entity',
+            'Source_URL',
+            'Source_label',
+            'Number_of_observations',
+            'Cumulative_total',
+            'Cumulative_total_per_thousand',
+            'Daily_change_in_cumulative_total',
+            'Daily_change_in_cumulative_total_per_thousand',
+            'seven_day_smoothed_daily_change',
+            'seven_day_smoothed_daily_change_per_thousand',
+            'Short_term_positive_rate',
+            'Short_term_tests_per_case',
+            'General_source_label',
+            'General_source_URL',
+            'Short_description',
+            'Detailed_description',
         ]
 
 
@@ -162,7 +133,18 @@ class OWID_vaccination_dataSerializer(serializers.ModelSerializer):
     class Meta:
         model = OWID_vaccination_data
         fields = [
-
+            'location',
+            # 'iso_code',
+            'date',
+            'total_vaccinations',
+            'people_vaccinated',
+            'people_fully_vaccinated',
+            'daily_vaccinations_raw',
+            'daily_vaccinations',
+            'total_vaccinations_per_hundred',
+            'people_vaccinated_per_hundred',
+            'people_fully_vaccinated_per_hundred',
+            'daily_vaccinations_per_million',
         ]
 
 
@@ -170,29 +152,10 @@ class OWID_vaccination_metaSerializer(serializers.ModelSerializer):
     class Meta:
         model = OWID_vaccination_meta
         fields = [
-
-        ]
-
-
-class UK_CasesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UK_Cases
-        fields = [
-
-        ]
-
-
-class UK_Cases_predictionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UK_Cases_prediction
-        fields = [
-
-        ]
-
-
-class UK_Cases_prediction_accuracySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UK_Cases_prediction_accuracy
-        fields = [
-
+            # 'iso_code',
+            'location',
+            'vaccines',
+            'last_observation_date',
+            'source_name',
+            'source_website',
         ]
