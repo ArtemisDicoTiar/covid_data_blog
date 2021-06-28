@@ -38,11 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'corsheaders',
+
     # REST API framework
     'rest_framework',
 
     # Libraries
     # 'django_filters',
+
 
     # APPs
     'covid_global',
@@ -52,6 +55,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -155,3 +160,7 @@ STATIC_ROOT = BASE_DIR / 'static/api/static'
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, 'static/api/static'),
 # )
+
+# CORS Config
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = False
