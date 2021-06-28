@@ -11,6 +11,10 @@ logging.getLogger('coco').setLevel(logging.WARNING)
 
 # This code targets on ISO 3166-1 (country) and 3166-2 (sub-regions)
 
+def get_search_result(target_region):
+    return pc.countries.search_fuzzy(target_region)
+
+
 def get_continent_name(country_code: str):
     if country_code:
         return coco.convert(names=country_code, to='continent')

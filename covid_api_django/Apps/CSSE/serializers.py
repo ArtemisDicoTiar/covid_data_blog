@@ -7,7 +7,7 @@ class CSSE_CasesCountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = CSSE_Cases
         fields = [
-            # 'CountryCode',
+            'CountryCode',
             'ContinentName',
             # 'SubdivisionCode',
             'date',
