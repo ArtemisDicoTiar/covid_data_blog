@@ -45,7 +45,7 @@ class UKRegionSearch_Service(BaseService):
         if len(query) == 0:
             return HttpResponseBadRequest("Requested Data not found")
 
-        return Response(dict(map(lambda row: (row['code'], row['name']), query)))
+        return Response(list(map(lambda row: {'name': row['name'], 'code': row['code']}, query)))
 
 
 class RegionSearch_Schema(AutoSchema):
