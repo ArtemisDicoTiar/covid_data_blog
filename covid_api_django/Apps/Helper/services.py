@@ -47,6 +47,33 @@ class UKRegionSearch_Service(BaseService):
 
         return Response(list(map(lambda row: {'name': row['name'], 'code': row['code']}, query)))
 
+    @staticmethod
+    def get_raw_linearised_data(query):
+        if len(query) == 0:
+            return HttpResponseBadRequest("Requested Data not found")
+
+        return Response(list(map(lambda row: {'name': row.name, 'code': row.code}, query)))
+
+
+class GeoApiSearch_Service(BaseService):
+    def __init__(self):
+        self.dropped_keys = []
+        self.single_keys = []
+
+        self.params = [
+            Params(name='lat', dtype=float, required=True,
+                   location='query', description="latitude"),
+            Params(name='long', dtype=float, required=True,
+                   location='query', description="longitude"),
+            # Params(name='key', dtype=str, required=True,
+            #        location='query', description="Google GeoCoding api key"),
+        ]
+        self.methods = ['get']
+
+        super(GeoApiSearch_Service, self).__init__(params=self.params, methods=self.methods,
+                                                   dropped_keys=self.dropped_keys, single_keys=self.single_keys)
+        self.schema = RegionSearch_Schema(self.fields)
+
 
 class RegionSearch_Schema(AutoSchema):
     manual_fields = []  # common fields
