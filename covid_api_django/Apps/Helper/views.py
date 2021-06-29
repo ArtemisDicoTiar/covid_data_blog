@@ -5,9 +5,10 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from route_decorator import Route
 
-from Apps.Helper.controller import get_region_search_result, get_continent_list
+import secrets_app
+from Apps.Helper.controller import get_region_search_result, get_continent_list, get_organised_region_info_from_long_lat
 from Apps.Helper.models import GlobalRegionMeta
-from Apps.Helper.services import CountrySearch_Service, UKRegionSearch_Service
+from Apps.Helper.services import CountrySearch_Service, UKRegionSearch_Service, GeoApiSearch_Service
 from Apps.UK.models import UK_Cases
 from Apps.common.utils.params import params
 
@@ -55,12 +56,10 @@ class UKRegionSearch_View(viewsets.ViewSet, ):
     def search(self, *args, **kwargs):
         regionName = kwargs['regionName']
 
-        return self.service.get_linearised_data(query=UK_Cases.objects
-                                                .filter(name__contains=str(regionName).capitalize())
-                                                .values('code', 'name')
-                                                .distinct()
-                                                .order_by('name')
-                                                )
+        return self.service.get_raw_linearised_data(query=UK_Cases.objects.raw(
+            "SELECT DISTINCT name, code FROM covid_info.UK_Cases "
+            "WHERE MATCH(name) AGAINST('{}')".format(regionName)
+        ))
 
     @action(methods=service.methods, detail=False)
     def region_list(self, *args, **kwargs):
@@ -69,3 +68,23 @@ class UKRegionSearch_View(viewsets.ViewSet, ):
                                                 .distinct()
                                                 .order_by('name')
                                                 )
+
+
+@route('/geoapi', 'googleGeoApi')
+class GeoApiSearch_View(viewsets.ViewSet, ):
+    service = GeoApiSearch_Service()
+
+    schema = service.schema
+
+    @action(methods=service.methods, detail=False)
+    @params(long=float,
+            lat=float,
+            # key=str
+            )
+    def search(self, *args, **kwargs):
+        lat = kwargs['lat']
+        long = kwargs['long']
+        key = secrets_app.GOOGLE_GEO_API_KEY
+
+        return get_organised_region_info_from_long_lat(lat, long, key)
+
