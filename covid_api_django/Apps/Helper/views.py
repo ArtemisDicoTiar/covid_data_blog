@@ -36,10 +36,10 @@ class GlobalRegionSearch_View(viewsets.ViewSet, ):
     def country_list(self, *args, **kwargs):
         continent = kwargs['continent']
 
-        return self.service.get_linearised_data(GlobalRegionMeta.objects \
-                                                .filter(continent=str(continent).capitalize()) \
-                                                .values('country_code', 'country_name') \
-                                                .distinct() \
+        return self.service.get_linearised_data(GlobalRegionMeta.objects
+                                                .filter(continent=str(continent).capitalize())
+                                                .values('country_code', 'country_name')
+                                                .distinct()
                                                 .order_by('country_name')
                                                 )
 
@@ -55,13 +55,17 @@ class UKRegionSearch_View(viewsets.ViewSet, ):
     def search(self, *args, **kwargs):
         regionName = kwargs['regionName']
 
-        return self.service.get_linearised_data(query=UK_Cases.objects \
-                                                .filter(name__contains=str(regionName).capitalize()) \
-                                                .values('code', 'name') \
-                                                .distinct())
+        return self.service.get_linearised_data(query=UK_Cases.objects
+                                                .filter(name__contains=str(regionName).capitalize())
+                                                .values('code', 'name')
+                                                .distinct()
+                                                .order_by('name')
+                                                )
 
     @action(methods=service.methods, detail=False)
     def region_list(self, *args, **kwargs):
-        return self.service.get_linearised_data(query=UK_Cases.objects \
-                                                .values('code', 'name') \
-                                                .distinct())
+        return self.service.get_linearised_data(query=UK_Cases.objects
+                                                .values('code', 'name')
+                                                .distinct()
+                                                .order_by('name')
+                                                )
