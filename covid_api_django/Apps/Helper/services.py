@@ -23,7 +23,7 @@ class CountrySearch_Service(BaseService):
         if len(query) == 0:
             return HttpResponseBadRequest("Requested Data not found")
 
-        return Response(dict(map(lambda row: (row['country_name'], row['country_code']), query)))
+        return Response(list(map(lambda row: {'name': row['country_name'], 'code': row['country_code']}, query)))
 
 
 class UKRegionSearch_Service(BaseService):
