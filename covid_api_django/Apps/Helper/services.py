@@ -31,8 +31,10 @@ class CountrySearch_Service(BaseService):
 
         return Response(dict(
             map(lambda code: (
-                code, {'short_name': get_country_short_name(code), 'official_name': get_country_official_name(code)}),
+                # {'short_name': get_country_short_name(code), 'official_name':
+                (code, get_country_official_name(code)),
                 codes)
+            )
         ))
 
 
