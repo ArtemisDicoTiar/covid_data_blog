@@ -39,7 +39,9 @@ class GlobalRegionSearch_View(viewsets.ViewSet, ):
         return self.service.get_linearised_data(GlobalRegionMeta.objects \
                                                 .filter(continent=str(continent).capitalize()) \
                                                 .values('country_code', 'country_name') \
-                                                .distinct())
+                                                .distinct() \
+                                                .order_by('country_name')
+                                                )
 
 
 @route('/uk', 'uk_region_search')
