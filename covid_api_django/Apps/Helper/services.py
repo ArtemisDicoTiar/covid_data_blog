@@ -19,23 +19,11 @@ class CountrySearch_Service(BaseService):
                                                     dropped_keys=self.dropped_keys, single_keys=self.single_keys)
         self.schema = RegionSearch_Schema(self.fields)
 
-    def get_linearised_data(self, serialiser):
-        if len(serialiser.data) == 0:
+    def get_linearised_data(self, query):
+        if len(query) == 0:
             return HttpResponseBadRequest("Requested Data not found")
 
-        codes = list()
-        for row in serialiser.data:
-            code = row['CountryCode']
-            if code not in codes:
-                codes.append(code)
-
-        return Response(dict(
-            map(lambda code: (
-                # {'short_name': get_country_short_name(code), 'official_name':
-                (code, get_country_official_name(code))),
-                codes
-            )
-        ))
+        return Response(dict(map(lambda row: (row['country_name'], row['country_code']), query)))
 
 
 class UKRegionSearch_Service(BaseService):

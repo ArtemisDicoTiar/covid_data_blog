@@ -11,6 +11,6 @@ DATABASE_INFOS = {
 
 DATABASE_NAMES = {
     'information_schema': 'INFORMATION_SCHEMA',
-    'covid_global_cumulative': 'covid',
+    'covid_base': 'covid',
     'covid_info': 'covid_info'
 }

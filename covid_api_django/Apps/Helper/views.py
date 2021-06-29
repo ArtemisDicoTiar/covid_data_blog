@@ -5,12 +5,10 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from route_decorator import Route
 
-from Apps.CSSE.models import CSSE_Cases
-from Apps.CSSE.serializers import CSSE_CasesCountrySerializer
 from Apps.Helper.controller import get_region_search_result, get_continent_list
+from Apps.Helper.models import GlobalRegionMeta
 from Apps.Helper.services import CountrySearch_Service, UKRegionSearch_Service
 from Apps.UK.models import UK_Cases
-from Apps.UK.serializers import UK_CasesSerializer
 from Apps.common.utils.params import params
 
 route = Route('/region')
@@ -38,11 +36,10 @@ class GlobalRegionSearch_View(viewsets.ViewSet, ):
     def country_list(self, *args, **kwargs):
         continent = kwargs['continent']
 
-        queryset = CSSE_Cases.objects \
-            .filter(ContinentName=str(continent).capitalize())
-        serializer_class = CSSE_CasesCountrySerializer(queryset, many=True)
-
-        return self.service.get_linearised_data(serializer_class)
+        return self.service.get_linearised_data(GlobalRegionMeta.objects \
+                                                .filter(continent=str(continent).capitalize()) \
+                                                .values('country_code', 'country_name') \
+                                                .distinct())
 
 
 @route('/uk', 'uk_region_search')
