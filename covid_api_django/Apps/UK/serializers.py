@@ -50,7 +50,7 @@ class UK_Cases_predictionSerializer(serializers.ModelSerializer):
             'name',
 
             'confirmed_prediction',
-            'deaths_prediction',
+            # 'deaths_prediction',
         ]
 
 
