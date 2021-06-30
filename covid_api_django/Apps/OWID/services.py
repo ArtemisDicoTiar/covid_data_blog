@@ -23,6 +23,7 @@ class OWIDDataService(BaseService):
                             'hospital_beds_per_thousand',
                             'life_expectancy',
                             'human_development_index',
+                            'location',
                             ]
 
         self.params = [
@@ -44,7 +45,7 @@ class OWIDDataService(BaseService):
 class OWIDMetaService(BaseService):
     def __init__(self):
         self.dropped_keys = []
-        self.single_keys = []
+        self.single_keys = ['location']
 
         self.params = [
             Params(name='regionCode', dtype=str, required=True,
