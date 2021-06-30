@@ -8,7 +8,7 @@ class UKService(BaseService):
 
     def __init__(self):
         self.dropped_keys = []
-        self.single_keys = ['code', 'name', 'areaType']
+        self.single_keys = ['code', 'name', 'areaType', 'predicted']
 
         self.params = [
             Params(name='regionCode', dtype=str, required=True,
