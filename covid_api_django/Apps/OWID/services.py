@@ -8,7 +8,22 @@ from Apps.common.services import Params, BaseService
 class OWIDDataService(BaseService):
     def __init__(self):
         self.dropped_keys = []
-        self.single_keys = ['code', 'continent', 'tests_units']
+        self.single_keys = ['code', 'continent',
+                            'population',
+                            'population_density',
+                            'median_age',
+                            'aged_65_older',
+                            'aged_70_older',
+                            'gdp_per_capita',
+                            'extreme_poverty',
+                            'cardiovasc_death_rate',
+                            'diabetes_prevalence',
+                            'female_smokers',
+                            'male_smokers',
+                            'hospital_beds_per_thousand',
+                            'life_expectancy',
+                            'human_development_index',
+                            ]
 
         self.params = [
             Params(name='regionCode', dtype=str, required=True,
