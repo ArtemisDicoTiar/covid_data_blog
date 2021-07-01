@@ -53,7 +53,8 @@ class OWIDDataView(viewsets.ViewSet, ):
                     date__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
                                  (datetime.strptime(startDate, '%Y-%m-%d')
                                   + timedelta(days=offset - 1)).date()
-                                 )
+                                 ),
+                    p_scores_all_ages__isnull=False,
                     )
         serializer_class = OWID_mortalitySerializer(queryset, many=True)
 
