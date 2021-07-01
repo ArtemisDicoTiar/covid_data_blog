@@ -32,7 +32,8 @@ class CSSE_CasesView(viewsets.ViewSet, ):
                     date__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
                                  (datetime.strptime(startDate, '%Y-%m-%d')
                                   + timedelta(days=offset - 1)).date()
-                                 )
+                                 ),
+                    SubdivisionCode=None
                     )
         serializer_class = CSSE_CasesCountrySerializer(queryset, many=True)
 
