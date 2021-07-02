@@ -37,7 +37,7 @@ class FaceBookChatBot_controller:
             json=payload
         )
 
-        return response.json()
+        return Response(response)
 
     @staticmethod
     def get_message():
