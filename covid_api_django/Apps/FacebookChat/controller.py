@@ -19,6 +19,7 @@ class FaceBookChatBot_controller:
     @staticmethod
     def send_message(recipient_id, response):
         FB_API_URL = 'https://graph.facebook.com/v11.0/me/messages'
+
         payload = {
             'message': {
                 'text': response
@@ -39,7 +40,7 @@ class FaceBookChatBot_controller:
             params=auth,
             data=payload
         )
-
+        print(response)
         return Response(response)
 
     @staticmethod
