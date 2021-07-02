@@ -1,13 +1,12 @@
 import json
 
-from pymessenger.bot import Bot
+import requests
 from rest_framework.response import Response
 
 import secrets_app
 
 
 class FaceBookChatBot_controller:
-    bot = Bot(secrets_app.FACEBOOK_CHAT_ACCESS_TOKEN)
 
     @staticmethod
     def verify_token(received_token, challenge):
@@ -15,8 +14,31 @@ class FaceBookChatBot_controller:
             return Response(int(challenge))
         return Response('INVALID VERIFICATION TOKEN')
 
-    def send_message(self, recipient_id, response):
-        return Response(self.bot.send_message(recipient_id, response))
+    @staticmethod
+    def send_message(recipient_id, response):
+        FB_API_URL = 'https://graph.facebook.com/v11.0/me/'
+        payload = {
+            'message': {
+                'text': response
+            },
+            'recipient': {
+                'id': recipient_id
+            },
+            'notification_type': 'regular'
+        }
+            # json.dumps()
+
+        auth = {
+            'access_token': secrets_app.FACEBOOK_CHAT_ACCESS_TOKEN
+        }
+
+        response = requests.post(
+            FB_API_URL,
+            params=auth,
+            data=payload
+        )
+
+        return Response(response)
 
     @staticmethod
     def get_message():
@@ -33,3 +55,9 @@ class FaceBookChatBot_controller:
                     message = message['message']['text']
                     response_sent_text = self.get_message()
                     return self.send_message(recipient, response_sent_text)
+                else:
+                    return Response("Error")
+            else:
+                return Response("NO MESSAGE")
+        else:
+            return Response("NO ENTRY")
