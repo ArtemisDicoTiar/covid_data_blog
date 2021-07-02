@@ -9,9 +9,9 @@ class FaceBookChatBot_controller:
     bot = Bot(secrets_app.FACEBOOK_CHAT_ACCESS_TOKEN)
 
     @staticmethod
-    def verify_token(received_token, hub):
+    def verify_token(received_token, challenge):
         if received_token == secrets_app.FACEBOOK_CHAT_VERIFY_TOKEN:
-            return hub['challenge']
+            return challenge
         return 'INVALID VERIFICATION TOKEN'
 
     def send_message(self, recipient_id, response):

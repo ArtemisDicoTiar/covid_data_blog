@@ -12,10 +12,12 @@ class FacebookChatBot_Webhook_Service(BaseService):
         self.single_keys = []
 
         self.params = [
-            # Params(name='offset', dtype=int, required=True,
-            #        location='query', description="The number of dates from startDate."),
-            # Params(name='startDate', dtype=str, required=True,
-            #        location='query', description="Query start date (format: %Y-%m-%d)"),
+            Params(name='hub.mode', dtype=str, required=False,
+                   location='query', description="mode"),
+            Params(name='hub.challenge', dtype=str, required=False,
+                   location='query', description="challenge code"),
+            Params(name='hub.verify_token', dtype=str, required=False,
+                   location='query', description="verification code"),
         ]
         self.methods = ['get', 'post']
 
