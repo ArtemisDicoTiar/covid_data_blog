@@ -17,7 +17,7 @@ class FaceBookChatBot_controller:
     @staticmethod
     def send_message(recipient_id, response):
         FB_API_URL = 'https://graph.facebook.com/v11.0/me/'
-        payload = {
+        payload = json.dumps({
             'message': {
                 'text': response
             },
@@ -25,7 +25,7 @@ class FaceBookChatBot_controller:
                 'id': recipient_id
             },
             'notification_type': 'regular'
-        }
+        })
 
         auth = {
             'access_token': secrets_app.FACEBOOK_CHAT_ACCESS_TOKEN
@@ -34,7 +34,7 @@ class FaceBookChatBot_controller:
         response = requests.post(
             FB_API_URL,
             params=auth,
-            json=payload
+            data=payload
         )
 
         return Response(response)
