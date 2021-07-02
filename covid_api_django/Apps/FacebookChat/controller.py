@@ -28,13 +28,9 @@ class FaceBookChatBot_controller:
         for event in output['entry']:
             messaging = event['messaging']
             for message in messaging:
-                if message.get('message'):
-                    # Facebook Messenger ID for user so we know where to send response back to
-                    recipient_id = message['sender']['id']
-                    if message['message'].get('text'):
-                        response_sent_text = self.get_message()
-                        self.send_message(recipient_id, response_sent_text)
-                    # if user sends us a GIF, photo,video, or any other non-text item
-                    if message['message'].get('attachments'):
-                        response_sent_nontext = self.get_message()
-                        self.send_message(recipient_id, response_sent_nontext)
+                if 'message' in message.keys():
+                    sender = message['sender']['id']
+                    recipient = message['recipient']['id']
+                    message = message['message']['text']
+                    response_sent_text = self.get_message()
+                    self.send_message(recipient, response_sent_text)

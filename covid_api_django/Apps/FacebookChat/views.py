@@ -24,7 +24,6 @@ class GlobalRegionSearch_View(viewsets.ViewSet, ):
 
     @action(methods=service.methods, detail=False)
     def webhook(self, *args, **kwargs):
-        print(args[0].data)
         if args[0].method == 'GET':
             if len(args[0].query_params) > 0:
                 mode = args[0].query_params['hub.mode']
@@ -35,5 +34,5 @@ class GlobalRegionSearch_View(viewsets.ViewSet, ):
 
         if args[0].method == 'POST':
             pp(args[0].query_params)
-            self.controller.trigger_post(args[0].query_params)
+            self.controller.trigger_post(args[0].data)
 
