@@ -26,7 +26,7 @@ SECRET_KEY = secrets_app.DJANGO_SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = not secrets_app.IS_PUBLISH_SERVER
 DEBUG = True
-APPEND_SLASH = False
+APPEND_SLASH = True
 
 ALLOWED_HOSTS = ['*']
 
