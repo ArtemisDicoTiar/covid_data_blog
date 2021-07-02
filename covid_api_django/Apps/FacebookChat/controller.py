@@ -27,7 +27,7 @@ class FaceBookChatBot_controller:
             'recipient': {
                 'id': recipient_id
             },
-            'notification_type': 'regular'
+            'messaging_type': 'RESPONSE'
         }
             # json.dumps()
 
@@ -38,7 +38,7 @@ class FaceBookChatBot_controller:
         response = requests.post(
             FB_API_URL,
             params=auth,
-            data=payload
+            json=payload
         )
         print(response)
         return Response(response)
