@@ -59,14 +59,14 @@ class FaceBookChatBot_controller:
                     if 'text' in message['message'].keys():
                         text = message['message']['text']
                         response_sent_text = self.get_message()
-                        return self.send_message(recipient, response_sent_text + ':' + text)
+                        return self.send_message(sender, response_sent_text + ':' + text)
 
                     elif 'attachments' in message.keys():
                         attached_item = message['attachments']['payload']
                         attached_type = message['attachments']['type']
 
                         response_sent_text = self.get_message()
-                        return self.send_message(recipient, response_sent_text + ':' + attached_type)
+                        return self.send_message(sender, response_sent_text + ':' + attached_type)
 
                 else:
                     return Response("Error")
