@@ -51,6 +51,7 @@ class FaceBookChatBot_controller:
         for event in output['entry']:
             messaging = event['messaging']
             for message in messaging:
+                print(message)
                 if 'message' in message.keys():
                     sender = message['sender']['id']
                     recipient = message['recipient']['id']
