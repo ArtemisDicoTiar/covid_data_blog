@@ -29,7 +29,7 @@ class FaceBookChatBot_controller:
             },
             'messaging_type': 'RESPONSE'
         }
-            # json.dumps()
+        # json.dumps()
 
         auth = {
             'access_token': secrets_app.FACEBOOK_CHAT_ACCESS_TOKEN
@@ -40,8 +40,6 @@ class FaceBookChatBot_controller:
             params=auth,
             json=payload
         )
-        print(response.reason)
-        print(response.raw)
         return Response(response)
 
     @staticmethod
@@ -50,7 +48,6 @@ class FaceBookChatBot_controller:
 
     def trigger_post(self, request):
         output = request
-        print(output)
         for event in output['entry']:
             messaging = event['messaging']
             for message in messaging:
@@ -61,14 +58,14 @@ class FaceBookChatBot_controller:
                     if 'text' in message['message'].keys():
                         text = message['message']['text']
                         response_sent_text = self.get_message()
-                        return self.send_message(recipient, response_sent_text + ':' + text)
+                        return self.send_message(sender, response_sent_text + ':' + text)
 
                     elif 'attachments' in message.keys():
                         attached_item = message['attachments']['payload']
                         attached_type = message['attachments']['type']
 
                         response_sent_text = self.get_message()
-                        return self.send_message(recipient, response_sent_text + ':' + attached_type)
+                        return self.send_message(sender, response_sent_text + ':' + attached_type)
 
                 else:
                     return Response("Error")
@@ -76,3 +73,5 @@ class FaceBookChatBot_controller:
                 return Response("NO MESSAGE")
         else:
             return Response("NO ENTRY")
+
+
