@@ -24,7 +24,7 @@ class FaceBookChatBot_controller:
         return Response("You are stunning!")
 
     def trigger_post(self, request):
-        output = request.get_json()
+        output = request
         for event in output['entry']:
             messaging = event['messaging']
             for message in messaging:
