@@ -29,13 +29,13 @@ class UK_CasesSerializer(serializers.ModelSerializer):
             # 'deathsDaily',
             # 'deathsCumulative',
 
-            'newDeaths28DaysByPublishDate',
-            'cumDeaths28DaysByPublishDate',
-            'cumDeaths28DaysByPublishDateRate',
-
-            'newDeaths28DaysByDeathDate',
-            'cumDeaths28DaysByDeathDate',
-            'cumDeaths28DaysByDeathDateRate',
+            # 'newDeaths28DaysByPublishDate',
+            # 'cumDeaths28DaysByPublishDate',
+            # 'cumDeaths28DaysByPublishDateRate',
+            #
+            # 'newDeaths28DaysByDeathDate',
+            # 'cumDeaths28DaysByDeathDate',
+            # 'cumDeaths28DaysByDeathDateRate',
         ]
 
 
