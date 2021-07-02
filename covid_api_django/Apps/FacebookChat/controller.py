@@ -44,7 +44,7 @@ class FaceBookChatBot_controller:
 
     @staticmethod
     def get_message():
-        return Response("You are stunning!")
+        return "You are stunning!"
 
     def trigger_post(self, request):
         output = request
@@ -52,12 +52,21 @@ class FaceBookChatBot_controller:
             messaging = event['messaging']
             for message in messaging:
                 if 'message' in message.keys():
-                    pp(message)
                     sender = message['sender']['id']
                     recipient = message['recipient']['id']
-                    text = message['message']['text']
-                    response_sent_text = self.get_message()
-                    return self.send_message(recipient, response_sent_text)
+
+                    if 'text' in message['message'].keys():
+                        text = message['message']['text']
+                        response_sent_text = self.get_message()
+                        return self.send_message(recipient, response_sent_text + ':' + text)
+
+                    elif 'attachments' in message.keys():
+                        attached_item = message['attachments']['payload']
+                        attached_type = message['attachments']['type']
+
+                        response_sent_text = self.get_message()
+                        return self.send_message(recipient, response_sent_text + ':' + attached_type)
+
                 else:
                     return Response("Error")
             else:
