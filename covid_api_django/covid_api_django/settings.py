@@ -24,7 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = secrets_app.DJANGO_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not secrets_app.IS_PUBLISH_SERVER
+# DEBUG = not secrets_app.IS_PUBLISH_SERVER
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
