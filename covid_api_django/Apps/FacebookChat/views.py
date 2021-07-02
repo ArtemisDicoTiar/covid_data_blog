@@ -9,7 +9,7 @@ import secrets_app
 from Apps.FacebookChat.controller import FaceBookChatBot_controller
 from Apps.FacebookChat.services import FacebookChatBot_Webhook_Service
 from Apps.common.utils.params import params
-from pprint import pprint as pp
+
 
 route = Route('/facebook')
 

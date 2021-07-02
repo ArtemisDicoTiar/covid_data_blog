@@ -5,6 +5,8 @@ from rest_framework.response import Response
 
 import secrets_app
 
+from pprint import pprint as pp
+
 
 class FaceBookChatBot_controller:
 
@@ -50,6 +52,7 @@ class FaceBookChatBot_controller:
             messaging = event['messaging']
             for message in messaging:
                 if 'message' in message.keys():
+                    pp(message)
                     sender = message['sender']['id']
                     recipient = message['recipient']['id']
                     text = message['message']['text']
