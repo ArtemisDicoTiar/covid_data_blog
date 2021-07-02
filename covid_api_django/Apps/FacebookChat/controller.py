@@ -16,8 +16,7 @@ class FaceBookChatBot_controller:
         return Response('INVALID VERIFICATION TOKEN')
 
     def send_message(self, recipient_id, response):
-        self.bot.send_text_message(recipient_id, response)
-        return Response('SUCCESS')
+        return self.bot.send_message(recipient_id, response)
 
     @staticmethod
     def get_message():
