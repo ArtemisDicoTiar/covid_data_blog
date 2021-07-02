@@ -41,8 +41,8 @@ class FaceBookChatBot_controller:
             json=payload
         )
         print(response.reason)
-        print(response.status_code)
-        return Response(status=response.status_code)
+        print(response.raw)
+        return Response(response)
 
     @staticmethod
     def get_message():
