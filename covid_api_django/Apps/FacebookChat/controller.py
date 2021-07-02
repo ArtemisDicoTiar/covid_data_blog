@@ -52,7 +52,7 @@ class FaceBookChatBot_controller:
                 if 'message' in message.keys():
                     sender = message['sender']['id']
                     recipient = message['recipient']['id']
-                    message = message['message']['text']
+                    text = message['message']['text']
                     response_sent_text = self.get_message()
                     return self.send_message(recipient, response_sent_text)
                 else:
