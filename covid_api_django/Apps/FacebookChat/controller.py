@@ -9,7 +9,6 @@ import secrets_app
 
 class FaceBookChatBot_controller:
     # bot = Bot(access_token=secrets_app.FACEBOOK_CHAT_ACCESS_TOKEN)
-
     @staticmethod
     def verify_token(received_token, challenge):
         if received_token == secrets_app.FACEBOOK_CHAT_VERIFY_TOKEN:

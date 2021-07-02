@@ -20,7 +20,8 @@ class GlobalRegionSearch_View(viewsets.ViewSet, ):
 
     schema = service.schema
 
-    controller = FaceBookChatBot_controller()
+    def __init__(self):
+        self.controller = FaceBookChatBot_controller()
 
     @action(methods=service.methods, detail=False)
     def webhook(self, *args, **kwargs):
