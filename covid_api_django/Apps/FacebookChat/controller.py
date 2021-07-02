@@ -12,7 +12,7 @@ class FaceBookChatBot_controller:
     @staticmethod
     def verify_token(received_token, challenge):
         if received_token == secrets_app.FACEBOOK_CHAT_VERIFY_TOKEN:
-            return Response(challenge)
+            return Response(int(challenge))
         return Response('INVALID VERIFICATION TOKEN')
 
     def send_message(self, recipient_id, response):
