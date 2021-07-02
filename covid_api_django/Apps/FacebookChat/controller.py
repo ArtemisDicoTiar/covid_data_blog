@@ -1,14 +1,14 @@
 import json
 
 import requests
+from pymessenger import Bot
 from rest_framework.response import Response
 
 import secrets_app
 
-from pprint import pprint as pp
-
 
 class FaceBookChatBot_controller:
+    bot = Bot(access_token=secrets_app.FACEBOOK_CHAT_ACCESS_TOKEN)
 
     @staticmethod
     def verify_token(received_token, challenge):
@@ -16,31 +16,34 @@ class FaceBookChatBot_controller:
             return Response(int(challenge))
         return Response('INVALID VERIFICATION TOKEN')
 
-    @staticmethod
-    def send_message(recipient_id, response):
-        FB_API_URL = 'https://graph.facebook.com/v11.0/me/'
-        payload = {
-            'message': {
-                'text': response
-            },
-            'recipient': {
-                'id': recipient_id
-            },
-            'notification_type': 'regular'
-        }
-            # json.dumps()
+    def send_message(self, recipient_id, response):
+        return Response(self.bot.send_message(recipient_id, response))
 
-        auth = {
-            'access_token': secrets_app.FACEBOOK_CHAT_ACCESS_TOKEN
-        }
-
-        response = requests.post(
-            FB_API_URL,
-            params=auth,
-            data=payload
-        )
-
-        return Response(response)
+    # @staticmethod
+    # def send_message(recipient_id, response):
+    #     FB_API_URL = 'https://graph.facebook.com/v11.0/me/'
+    #     payload = {
+    #         'message': {
+    #             'text': response
+    #         },
+    #         'recipient': {
+    #             'id': recipient_id
+    #         },
+    #         'notification_type': 'regular'
+    #     }
+    #         # json.dumps()
+    #
+    #     auth = {
+    #         'access_token': secrets_app.FACEBOOK_CHAT_ACCESS_TOKEN
+    #     }
+    #
+    #     response = requests.post(
+    #         FB_API_URL,
+    #         params=auth,
+    #         data=payload
+    #     )
+    #
+    #     return Response(response)
 
     @staticmethod
     def get_message():
@@ -59,14 +62,14 @@ class FaceBookChatBot_controller:
                     if 'text' in message['message'].keys():
                         text = message['message']['text']
                         response_sent_text = self.get_message()
-                        return self.send_message(sender, response_sent_text + ':' + text)
+                        return self.send_message(recipient, response_sent_text + ':' + text)
 
                     elif 'attachments' in message.keys():
                         attached_item = message['attachments']['payload']
                         attached_type = message['attachments']['type']
 
                         response_sent_text = self.get_message()
-                        return self.send_message(sender, response_sent_text + ':' + attached_type)
+                        return self.send_message(recipient, response_sent_text + ':' + attached_type)
 
                 else:
                     return Response("Error")
