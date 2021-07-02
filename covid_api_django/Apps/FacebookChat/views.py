@@ -23,10 +23,13 @@ class GlobalRegionSearch_View(viewsets.ViewSet, ):
 
     @action(methods=service.methods, detail=False)
     def webhook(self, *args, **kwargs):
-        mode = args[0].query_params['hub.mode']
-        challenge = args[0].query_params['hub.challenge']
-        verify_token = args[0].query_params['hub.verify_token']
+        if len(args[0].query_params) > 0:
+            mode = args[0].query_params['hub.mode']
+            challenge = args[0].query_params['hub.challenge']
+            verify_token = args[0].query_params['hub.verify_token']
 
-        return self.controller.verify_token(verify_token, challenge)
+            return self.controller.verify_token(verify_token, challenge)
+
+        return Response("test")
 
 
