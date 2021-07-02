@@ -33,6 +33,5 @@ class GlobalRegionSearch_View(viewsets.ViewSet, ):
                 return self.controller.verify_token(verify_token, challenge)
 
         if args[0].method == 'POST':
-            pp(args[0].data)
-            self.controller.trigger_post(args[0].data)
+            return self.controller.trigger_post(args[0].data)
 
