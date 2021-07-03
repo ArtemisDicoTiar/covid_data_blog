@@ -33,7 +33,6 @@ class FaceBookChatBot_controller:
 
     def trigger_post(self, request):
         output = request
-        pp(output)
         for event in output['entry']:
             messaging = event['messaging']
             for message in messaging:
@@ -109,10 +108,12 @@ class FaceBookChatBot_controller:
         def _get_subscription_response():
             ...
 
+        # ============= MAIN LOGIC START ============= #
         payload = _construct_payload()
 
         # postback button clicked
         if _is_postback(content):
+            print('postback')
             # greeting message
             if content['postback']['payload'] == 'get_started':
                 payload['message'] = {
@@ -126,13 +127,18 @@ class FaceBookChatBot_controller:
 
 
             else:
-                print('UNHANDLED CONTENT')
-                print(content)
+                print('UNHANDLED POSTBACK')
+                pp(content)
 
         # message delivered
-        if _is_message(content):
+        elif _is_message(content):
+            print('message')
             payload['message'] = {
                 'text': 'Message Response is unavailable. Please use buttons below.'
             }
+
+        else:
+            print('UNHANDLED CONTENT')
+            pp(content)
 
         return payload
