@@ -36,8 +36,6 @@ class FaceBookChatBot_controller:
         for event in output['entry']:
             messaging = event['messaging']
             for message in messaging:
-                pp(message)
-
                 sender = message['sender']['id']
                 recipient = message['recipient']['id']
 
@@ -82,7 +80,15 @@ class FaceBookChatBot_controller:
                         "content_type": "text",
                         "title": "Africa",
                         "payload": "continent_Africa__",
-                    }
+                    },{
+                        "content_type": "text",
+                        "title": "America",
+                        "payload": "continent_America__",
+                    },{
+                        "content_type": "text",
+                        "title": "TEST",
+                        "payload": "continent_TEST__",
+                    },
                 ]
             }
 
@@ -100,7 +106,6 @@ class FaceBookChatBot_controller:
 
         # postback button clicked
         if _is_postback(content):
-            print('postback')
             # greeting message
             if content['postback']['payload'] == 'get_started':
                 payload['message'] = {
@@ -108,23 +113,32 @@ class FaceBookChatBot_controller:
                 }
 
             # subscribe / today dialog start
-            elif content['postback']['payload'] == 'subscribe' \
-                    or content['postback']['payload'] == 'todayInfo':
-                ...
+            elif content['postback']['payload'] == 'subscribe':
+                payload['message'] = _request_query_region()
+
+            elif content['postback']['payload'] == 'todayInfo':
+                payload['message'] = _get_region_search_result()
+
+            # sub_regions = json.loads(
+            #     requests.get('http://localhost:8000/api/region/global/search/',
+            #                  params={'regionName': 'province_name'}).content
+            # )
 
             else:
                 print('UNHANDLED POSTBACK')
 
         # message delivered
         elif _is_message(content):
-            print('message')
             payload['message'] = {
                 'text': 'Message Response is unavailable. Please use buttons next to text bar.'
             }
 
         else:
+            payload['message'] = {
+                'text': 'Error. (Enquiry to Server manager)'
+            }
             print('UNHANDLED CONTENT')
+            pp(content)
 
         print("THIS IS PAYLOAD")
-        pp(payload)
         return payload
