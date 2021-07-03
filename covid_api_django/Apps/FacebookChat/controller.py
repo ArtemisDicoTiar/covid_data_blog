@@ -36,29 +36,17 @@ class FaceBookChatBot_controller:
         for event in output['entry']:
             messaging = event['messaging']
             for message in messaging:
-                if 'message' in message.keys():
-                    sender = message['sender']['id']
-                    recipient = message['recipient']['id']
-                    pp(message)
-                    return self.send_message(self.get_response(message, sender))
-                    # if 'text' in message['message'].keys():
-                    #     text = message['message']['text']
-                    #     response_sent_text = self.get_message()
-                    #     return self.send_message(sender, response_sent_text + ':' + text)
-                    #
-                    # elif 'attachments' in message.keys():
-                    #     attached_item = message['attachments']['payload']
-                    #     attached_type = message['attachments']['type']
-                    #
-                    #     response_sent_text = self.get_message()
-                    #     return self.send_message(sender, response_sent_text + ':' + attached_type)
+                pp(message)
 
-                else:
-                    return Response("Error")
+                sender = message['sender']['id']
+                recipient = message['recipient']['id']
+
+                return self.send_message(self.get_response(message, sender))
+
             else:
-                return Response("NO MESSAGE")
+                return Response("NO MESSAGE", status=500)
         else:
-            return Response("NO ENTRY")
+            return Response("NO ENTRY", status=500)
 
     @staticmethod
     def get_response(content, user_id):
