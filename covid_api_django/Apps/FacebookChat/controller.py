@@ -140,6 +140,6 @@ class FaceBookChatBot_controller:
             print('UNHANDLED CONTENT')
             pp(content)
 
-        payload['message']['reply_to']['mid'] = content['message']['mid']
+        payload['message']['reply_to'] = {'mid': content['message']['mid']}
 
         return payload
