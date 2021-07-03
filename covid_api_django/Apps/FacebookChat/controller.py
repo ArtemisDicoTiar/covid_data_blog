@@ -1,4 +1,6 @@
 import json
+from datetime import date
+from http import HTTPStatus
 from pprint import pprint as pp
 
 import requests
@@ -67,39 +69,64 @@ class FaceBookChatBot_controller:
                     return True
             return False
 
-        def _request_query_region():
-            return {
-                "text": "Search your region:"
+        def _get_user_info(user_id):
+            req_point = 'https://graph.facebook.com/v11.0/{user_id}'.format(user_id=user_id)
+
+            params = {
+                'fields': 'id,name,locale,timezone',
+                'access_token': secrets_app.FACEBOOK_CHAT_ACCESS_TOKEN
             }
 
-        def _get_region_search_result():
-            return {
-                "text": "Pick where you live (continent):",
-                "quick_replies": [
-                    {
-                        "content_type": "text",
-                        "title": "Africa",
-                        "payload": "continent_Africa__",
-                    },{
-                        "content_type": "text",
-                        "title": "America",
-                        "payload": "continent_America__",
-                    },{
-                        "content_type": "text",
-                        "title": "TEST",
-                        "payload": "continent_TEST__",
-                    },
-                ]
-            }
+            response = requests.get(
+                req_point,
+                params=params,
+            )
 
-        def _get_user_info():
-            ...
+            return response
 
-        def _get_today_info():
-            ...
+        def _save_user_info(user_data):
+            req_point = 'http://localhost:8000/api/facebook/users/info/'
 
-        def _get_subscription_response():
-            ...
+            # user_data saved check
+            response = requests.get(
+                req_point,
+                params=user_data,
+            )
+
+            if response.status_code == HTTPStatus.BAD_REQUEST:
+                # should PUT
+                return requests.put(
+                    req_point,
+                    params=user_data
+                )
+
+            else:
+                if json.loads(response.content) != user_data:
+                    # should post
+                    return requests.post(
+                        req_point,
+                        params=user_data
+                    )
+
+            return response
+
+        def _delete_user_info(user_data):
+            req_point = 'http://localhost:8000/api/facebook/users/info/'
+
+            # user_data saved check
+            response = requests.get(
+                req_point,
+                params=user_data,
+            )
+
+            if response.status_code == HTTPStatus.OK:
+                # should PUT
+                return requests.delete(
+                    req_point,
+                    params=user_data
+                )
+
+            return response
 
         # ============= MAIN LOGIC START ============= #
         payload = _construct_payload()
@@ -112,17 +139,52 @@ class FaceBookChatBot_controller:
                     'text': 'Welcome to COVID notification chatbot.'
                 }
 
-            # subscribe / today dialog start
+            # subscribe
             elif content['postback']['payload'] == 'subscribe':
-                payload['message'] = _request_query_region()
+                user_data_response = _get_user_info(user_id=user_id)
 
-            elif content['postback']['payload'] == 'todayInfo':
-                payload['message'] = _get_region_search_result()
+                # user data request failed.
+                if user_data_response.status_code != HTTPStatus.OK:
+                    payload['message'] = {
+                        'text': 'Your user information request failed. Subscription is unavailable.'
+                    }
 
-            # sub_regions = json.loads(
-            #     requests.get('http://localhost:8000/api/region/global/search/',
-            #                  params={'regionName': 'province_name'}).content
-            # )
+                else:
+                    user_data = json.loads(user_data_response.content)
+                    save_response = _save_user_info(user_data=user_data)
+
+                    if save_response.status_code != HTTPStatus.OK:
+                        payload['message'] = {
+                            'text': 'Server Database Error. Please contact server manager.'
+                        }
+
+                    else:
+                        payload['message'] = {
+                            'text': 'Successfully subscribed. Every 9AM you will receive latest information.'
+                        }
+
+            # unsubscribe
+            elif content['postback']['payload'] == 'unsubscribe':
+                user_data_response = _get_user_info(user_id=user_id)
+
+                # user data request failed.
+                if user_data_response.status_code != HTTPStatus.OK:
+                    payload['message'] = {
+                        'text': 'Your user information request failed. Subscription is unavailable.'
+                    }
+                else:
+                    user_data = json.loads(user_data_response.content)
+                    delete_response = _delete_user_info(user_data=user_data)
+
+                    if delete_response.status_code != HTTPStatus.OK:
+                        payload['message'] = {
+                            'text': 'Server Database Error. Please contact server manager.'
+                        }
+
+                    else:
+                        payload['message'] = {
+                            'text': 'Successfully subscription cancelled.'
+                        }
 
             else:
                 print('UNHANDLED POSTBACK')
@@ -139,6 +201,5 @@ class FaceBookChatBot_controller:
             }
             print('UNHANDLED CONTENT')
             pp(content)
-
 
         return payload

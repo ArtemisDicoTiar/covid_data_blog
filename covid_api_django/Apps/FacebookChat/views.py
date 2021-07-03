@@ -99,3 +99,11 @@ class FacebookSubscription_View(viewsets.ViewSet, ):
                 return Response(serializer_class.validated_data)
 
             return Response('Error', status=500)
+
+        if args[0].method == 'DELETE':
+            try:
+                FacebookSubscription_model.objects.get(recipient_id=kwargs['id']).delete()
+                return Response(kwargs)
+
+            except:
+                return Response('Error', status=500)

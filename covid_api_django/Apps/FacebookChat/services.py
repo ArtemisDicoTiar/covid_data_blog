@@ -53,7 +53,7 @@ class FacebookSubscription_Service(BaseService):
             Params(name='timezone', dtype=int, required=False,
                    location='query', description="timezone"),
         ]
-        self.methods = ['get', 'put', 'post']
+        self.methods = ['get', 'put', 'post', 'delete']
 
         super(FacebookSubscription_Service, self).__init__(params=self.params, methods=self.methods,
                                                            dropped_keys=self.dropped_keys,
