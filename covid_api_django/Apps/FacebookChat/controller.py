@@ -109,7 +109,7 @@ class FaceBookChatBot_controller:
 
         # ============= MAIN LOGIC START ============= #
         payload = _construct_payload()
-
+        pp(content)
         # postback button clicked
         if _is_postback(content):
             print('postback')
@@ -124,21 +124,19 @@ class FaceBookChatBot_controller:
                     or content['postback']['payload'] == 'todayInfo':
                 ...
 
-
             else:
                 print('UNHANDLED POSTBACK')
-                pp(content)
 
         # message delivered
         elif _is_message(content):
             print('message')
             payload['message'] = {
-                'text': 'Message Response is unavailable. Please use buttons below.'
+                'text': 'Message Response is unavailable. Please use buttons next to text bar.'
             }
 
         else:
             print('UNHANDLED CONTENT')
-            pp(content)
+
         print("THIS IS PAYLOAD")
         pp(payload)
         return payload
