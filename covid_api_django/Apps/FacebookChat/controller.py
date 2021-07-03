@@ -1,4 +1,5 @@
 import json
+from pprint import pprint as pp
 
 import requests
 from pymessenger import Bot
@@ -28,7 +29,6 @@ class FaceBookChatBot_controller:
             },
             'messaging_type': 'RESPONSE'
         }
-        # json.dumps()
 
         auth = {
             'access_token': secrets_app.FACEBOOK_CHAT_ACCESS_TOKEN
@@ -41,12 +41,9 @@ class FaceBookChatBot_controller:
         )
         return Response(response)
 
-    @staticmethod
-    def get_message():
-        return "You are stunning!"
-
     def trigger_post(self, request):
         output = request
+        pp(output)
         for event in output['entry']:
             messaging = event['messaging']
             for message in messaging:
@@ -72,5 +69,9 @@ class FaceBookChatBot_controller:
                 return Response("NO MESSAGE")
         else:
             return Response("NO ENTRY")
+
+    @staticmethod
+    def get_message():
+        return "You are stunning!"
 
 
