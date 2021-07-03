@@ -11,10 +11,8 @@ from Apps.common.utils.GeoInfoConvertor import get_country_iso_information
 def send_daily_notification():
     bot_controller = FaceBookChatBot_controller()
     today = datetime.now().date() - timedelta(days=3)
+    current_hour = datetime.now().time().hour
 
-    # current_hour = datetime.now().time().hour
-
-    current_hour = 10
     res = requests.get(
         url='http://localhost:8000/api/facebook/timezone/users/',
         params={'timezone': current_hour-9}
