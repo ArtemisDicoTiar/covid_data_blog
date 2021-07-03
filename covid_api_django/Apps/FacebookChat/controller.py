@@ -103,7 +103,7 @@ class FaceBookChatBot_controller:
 
         # ============= MAIN LOGIC START ============= #
         payload = _construct_payload()
-
+        pp(content)
         # postback button clicked
         if _is_postback(content):
             # greeting message
@@ -140,5 +140,4 @@ class FaceBookChatBot_controller:
             print('UNHANDLED CONTENT')
             pp(content)
 
-        print("THIS IS PAYLOAD")
         return payload
