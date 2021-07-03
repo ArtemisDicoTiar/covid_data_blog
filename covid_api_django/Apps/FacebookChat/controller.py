@@ -33,10 +33,10 @@ class FaceBookChatBot_controller:
 
     def trigger_post(self, request):
         output = request
-        pp(output)
         for event in output['entry']:
             messaging = event['messaging']
             for message in messaging:
+                pp(message)
                 if 'message' in message.keys():
                     sender = message['sender']['id']
                     recipient = message['recipient']['id']
@@ -66,9 +66,9 @@ class FaceBookChatBot_controller:
     def get_response(content, user_id):
         def _construct_payload():
             return {
+                'recipient': {'id': int(user_id)},
+                'messaging_type': 'RESPONSE',
                 'message': {},
-                'recipient': {'id': user_id},
-                'messaging_type': 'RESPONSE'
             }
 
         def _is_postback(msg):
@@ -141,5 +141,6 @@ class FaceBookChatBot_controller:
         else:
             print('UNHANDLED CONTENT')
             pp(content)
-
+        print("THIS IS PAYLOAD")
+        pp(payload)
         return payload
