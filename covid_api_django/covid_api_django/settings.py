@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # Libraries
-    # 'django_filters',
+    'django_filters',
 
     # APPs
     'covid_global',

@@ -3,13 +3,12 @@ from django.db import models
 
 # Create your models here.
 
-class GlobalRegionMeta(models.Model):
-    country_code = models.TextField(primary_key=True)
-    country_name = models.TextField()
-    continent = models.TextField()
-    Lat = models.FloatField()
-    Long = models.FloatField(db_column='Long')
+class FacebookSubscription_model(models.Model):
+    recipient_id = models.TextField(primary_key=True, unique=True)
+    name = models.TextField()
+    locale = models.TextField()
+    timezone = models.IntegerField()
 
     class Meta:
-        app_label = 'covid_base'
-        db_table = '_meta_data'
+        app_label = 'covid_info'
+        db_table = 'Facebook_subscription'

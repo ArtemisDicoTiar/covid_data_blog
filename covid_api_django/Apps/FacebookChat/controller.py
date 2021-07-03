@@ -17,18 +17,8 @@ class FaceBookChatBot_controller:
         return Response('INVALID VERIFICATION TOKEN')
 
     @staticmethod
-    def send_message(recipient_id, response):
+    def send_message(payload):
         FB_API_URL = 'https://graph.facebook.com/v11.0/me/messages'
-
-        payload = {
-            'message': {
-                'text': response
-            },
-            'recipient': {
-                'id': recipient_id
-            },
-            'messaging_type': 'RESPONSE'
-        }
 
         auth = {
             'access_token': secrets_app.FACEBOOK_CHAT_ACCESS_TOKEN
@@ -50,18 +40,20 @@ class FaceBookChatBot_controller:
                 if 'message' in message.keys():
                     sender = message['sender']['id']
                     recipient = message['recipient']['id']
+                    content = message['message']
 
-                    if 'text' in message['message'].keys():
-                        text = message['message']['text']
-                        response_sent_text = self.get_message()
-                        return self.send_message(sender, response_sent_text + ':' + text)
-
-                    elif 'attachments' in message.keys():
-                        attached_item = message['attachments']['payload']
-                        attached_type = message['attachments']['type']
-
-                        response_sent_text = self.get_message()
-                        return self.send_message(sender, response_sent_text + ':' + attached_type)
+                    return self.send_message(self.get_response(content, sender))
+                    # if 'text' in message['message'].keys():
+                    #     text = message['message']['text']
+                    #     response_sent_text = self.get_message()
+                    #     return self.send_message(sender, response_sent_text + ':' + text)
+                    #
+                    # elif 'attachments' in message.keys():
+                    #     attached_item = message['attachments']['payload']
+                    #     attached_type = message['attachments']['type']
+                    #
+                    #     response_sent_text = self.get_message()
+                    #     return self.send_message(sender, response_sent_text + ':' + attached_type)
 
                 else:
                     return Response("Error")
@@ -71,7 +63,76 @@ class FaceBookChatBot_controller:
             return Response("NO ENTRY")
 
     @staticmethod
-    def get_message():
-        return "You are stunning!"
+    def get_response(content, user_id):
+        def _construct_payload():
+            return {
+                'message': {},
+                'recipient': {'id': user_id},
+                'messaging_type': 'RESPONSE'
+            }
+
+        def _is_postback(msg):
+            if 'postback' in msg.keys():
+                if 'payload' in msg['postback'].keys():
+                    return True
+            return False
+
+        def _is_message(msg):
+            if 'message' in msg.keys():
+                if 'text' in msg['message'].keys():
+                    return True
+            return False
+
+        def _request_query_region():
+            return {
+                "text": "Search your region:"
+            }
+
+        def _get_region_search_result():
+            return {
+                "text": "Pick where you live (continent):",
+                "quick_replies": [
+                    {
+                        "content_type": "text",
+                        "title": "Africa",
+                        "payload": "continent_Africa__",
+                    }
+                ]
+            }
+
+        def _get_user_info():
+            ...
+
+        def _get_today_info():
+            ...
+
+        def _get_subscription_response():
+            ...
+
+        payload = _construct_payload()
+
+        # postback button clicked
+        if _is_postback(content):
+            # greeting message
+            if content['postback']['payload'] == 'get_started':
+                payload['message'] = {
+                    'text': 'Welcome to COVID notification chatbot.'
+                }
+
+            # subscribe / today dialog start
+            elif content['postback']['payload'] == 'subscribe' \
+                    or content['postback']['payload'] == 'todayInfo':
+                ...
 
 
+            else:
+                print('UNHANDLED CONTENT')
+                print(content)
+
+        # message delivered
+        if _is_message(content):
+            payload['message'] = {
+                'text': 'Message Response is unavailable. Please use buttons below.'
+            }
+
+        return payload

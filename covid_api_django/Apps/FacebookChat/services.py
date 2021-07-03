@@ -33,6 +33,34 @@ class FacebookChatBot_Webhook_Service(BaseService):
         return Response(query)
 
 
+class FacebookSubscription_Service(BaseService):
+    def __init__(self):
+        self.dropped_keys = []
+        self.single_keys = [
+            'recipient_id',
+            'name',
+            'locale',
+            'timezone',
+        ]
+
+        self.params = [
+            Params(name='id', dtype=str, required=True,
+                   location='query', description="user id"),
+            Params(name='name', dtype=str, required=False,
+                   location='query', description="user name"),
+            Params(name='locale', dtype=str, required=False,
+                   location='query', description="locale code"),
+            Params(name='timezone', dtype=int, required=False,
+                   location='query', description="timezone"),
+        ]
+        self.methods = ['get', 'put', 'post']
+
+        super(FacebookSubscription_Service, self).__init__(params=self.params, methods=self.methods,
+                                                           dropped_keys=self.dropped_keys,
+                                                           single_keys=self.single_keys)
+        self.schema = FacebookChatBot_Schema(self.fields)
+
+
 class FacebookChatBot_Schema(AutoSchema):
     manual_fields = []  # common fields
 
