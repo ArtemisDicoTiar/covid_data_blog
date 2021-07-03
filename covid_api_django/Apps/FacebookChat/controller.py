@@ -33,6 +33,7 @@ class FaceBookChatBot_controller:
 
     def trigger_post(self, request):
         output = request
+        pp(output)
         for event in output['entry']:
             messaging = event['messaging']
             for message in messaging:
@@ -110,7 +111,7 @@ class FaceBookChatBot_controller:
 
         # ============= MAIN LOGIC START ============= #
         payload = _construct_payload()
-        pp(content)
+
         # postback button clicked
         if _is_postback(content):
             print('postback')
