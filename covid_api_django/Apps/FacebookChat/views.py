@@ -10,7 +10,8 @@ import secrets_app
 from Apps.FacebookChat.controller import FaceBookChatBot_controller
 from Apps.FacebookChat.models import FacebookSubscription_model
 from Apps.FacebookChat.serializers import FacebookSubscription_Serializer
-from Apps.FacebookChat.services import FacebookChatBot_Webhook_Service, FacebookSubscription_Service
+from Apps.FacebookChat.services import FacebookChatBot_Webhook_Service, FacebookSubscription_Service, \
+    FacebookSubscriptionUsers_Service
 from Apps.common.utils.params import params
 
 route = Route('/facebook')
@@ -107,3 +108,21 @@ class FacebookSubscription_View(viewsets.ViewSet, ):
 
             except:
                 return Response('Error', status=500)
+
+
+@route('/timezone', 'facebook_userinfo_by_times')
+class FacebookSubscriptionUsers_View(viewsets.ViewSet, ):
+    service = FacebookSubscriptionUsers_Service()
+
+    schema = service.schema
+
+    @action(methods=service.methods, detail=False)
+    @params(timezone=int)
+    def users(self, *args, **kwargs):
+        timezone = kwargs['timezone']
+        queryset = FacebookSubscription_model.objects \
+            .filter(timezone=timezone)
+
+        serializer_class = FacebookSubscription_Serializer(queryset, many=True)
+
+        return self.service.get_linearised_data(serializer_class)

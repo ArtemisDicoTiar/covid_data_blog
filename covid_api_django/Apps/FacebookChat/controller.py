@@ -11,7 +11,7 @@ import secrets_app
 
 
 class FaceBookChatBot_controller:
-    # bot = Bot(access_token=secrets_app.FACEBOOK_CHAT_ACCESS_TOKEN)
+
     @staticmethod
     def verify_token(received_token, challenge):
         if received_token == secrets_app.FACEBOOK_CHAT_VERIFY_TOKEN:
@@ -95,7 +95,7 @@ class FaceBookChatBot_controller:
 
             if response.status_code == HTTPStatus.BAD_REQUEST:
                 # should PUT
-                return requests.put(
+                return requests.post(
                     req_point,
                     params=user_data
                 )
@@ -103,7 +103,7 @@ class FaceBookChatBot_controller:
             else:
                 if json.loads(response.content) != user_data:
                     # should post
-                    return requests.post(
+                    return requests.put(
                         req_point,
                         params=user_data
                     )

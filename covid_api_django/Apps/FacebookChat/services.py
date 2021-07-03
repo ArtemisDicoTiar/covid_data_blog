@@ -61,6 +61,29 @@ class FacebookSubscription_Service(BaseService):
         self.schema = FacebookChatBot_Schema(self.fields)
 
 
+class FacebookSubscriptionUsers_Service(BaseService):
+    def __init__(self):
+        self.dropped_keys = []
+        self.single_keys = []
+
+        self.params = [
+            Params(name='timezone', dtype=int, required=True,
+                   location='query', description="timezone"),
+        ]
+        self.methods = ['get']
+
+        super(FacebookSubscriptionUsers_Service, self).__init__(params=self.params, methods=self.methods,
+                                                                dropped_keys=self.dropped_keys,
+                                                                single_keys=self.single_keys)
+        self.schema = FacebookChatBot_Schema(self.fields)
+
+    def get_linearised_data(self, serialiser):
+        if len(serialiser.data) == 0:
+            return HttpResponseBadRequest("Requested Data not found")
+
+        return Response(map(lambda row: tuple(row.values()), serialiser.data))
+
+
 class FacebookChatBot_Schema(AutoSchema):
     manual_fields = []  # common fields
 
