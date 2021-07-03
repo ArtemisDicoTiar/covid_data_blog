@@ -39,7 +39,7 @@ class FaceBookChatBot_controller:
                 if 'message' in message.keys():
                     sender = message['sender']['id']
                     recipient = message['recipient']['id']
-
+                    pp(message)
                     return self.send_message(self.get_response(message, sender))
                     # if 'text' in message['message'].keys():
                     #     text = message['message']['text']
@@ -109,7 +109,7 @@ class FaceBookChatBot_controller:
 
         # ============= MAIN LOGIC START ============= #
         payload = _construct_payload()
-        pp(content)
+
         # postback button clicked
         if _is_postback(content):
             print('postback')
