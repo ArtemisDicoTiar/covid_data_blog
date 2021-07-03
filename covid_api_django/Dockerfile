@@ -5,7 +5,8 @@ WORKDIR /covid_api_django
 COPY requirements.txt /covid_api_django/
 
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN --mount=type=cache,target=/root/.cache \
+    pip install -r requirements.txt
 
 # Django application image build
 FROM builder AS deployer
