@@ -110,7 +110,7 @@ class FaceBookChatBot_controller:
 
         # ============= MAIN LOGIC START ============= #
         payload = _construct_payload()
-
+        pp(content)
         # postback button clicked
         if _is_postback(content):
             print('postback')
