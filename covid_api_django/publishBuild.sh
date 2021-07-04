@@ -1,6 +1,4 @@
-docker stop covid_api
 docker stop covid_api_django
-docker rm covid_api
 docker rm covid_api_django
 
 #docker rmi covid_api_django_django_api

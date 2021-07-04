@@ -4,22 +4,39 @@ from http import HTTPStatus
 
 import requests
 
-from Apps.FacebookChat.controller import FaceBookChatBot_controller
+import secrets_app
 from Apps.common.utils.GeoInfoConvertor import get_country_iso_information
 
 
 def send_daily_notification():
-    bot_controller = FaceBookChatBot_controller()
+    def send_message(payload):
+        FB_API_URL = 'https://graph.facebook.com/v11.0/me/messages'
+
+        auth = {
+            'access_token': secrets_app.FACEBOOK_CHAT_ACCESS_TOKEN
+        }
+
+        response = requests.post(
+            FB_API_URL,
+            params=auth,
+            json=payload
+        )
+        return response
+
     today = datetime.now().date() - timedelta(days=3)
     current_hour = datetime.now().time().hour
+    print('Daily Notification:', today, current_hour)
 
     res = requests.get(
         url='http://localhost:8000/api/facebook/timezone/users/',
-        params={'timezone': current_hour-9}
+        params={'timezone': current_hour - 10}
     )
+
     if res.status_code == HTTPStatus.OK:
         current_queue = json.loads(res.content)
+        print('Daily Notification Targets:', current_queue)
         while current_queue:
+            print('Remaining Queue:', current_queue)
             user_id, user_name, locale, timezone = current_queue.pop(0)
 
             country_obj = get_country_iso_information(locale.split('_')[-1])
@@ -44,22 +61,22 @@ def send_daily_notification():
 
             if data_res.status_code == HTTPStatus.OK:
                 data = json.loads(data_res.content)
-                confirmed_cases = int(data['confirmed'][-1])
+                new_confirmed_cases = int(data['confirmed'][-1]) - int(data['confirmed'][-2])
                 latest_date = data['date'][-1]
 
                 successMsg = payload.copy()
                 successMsg['message'] = {
                     'text': 'COVID Confirmed Cases in {country} on {latest} is "{cases}"'
-                        .format(country=region_name, latest=latest_date, cases=confirmed_cases)
+                        .format(country=region_name, latest=latest_date, cases=new_confirmed_cases)
                 }
-                bot_controller.send_message(successMsg)
+                send_message(successMsg)
 
             else:
                 errorMsg = payload.copy()
                 errorMsg['message'] = {
                     'text': 'COVID Data request failed. Please view detailed information on following website.'
                 }
-                bot_controller.send_message(errorMsg)
+                send_message(errorMsg)
 
             website = payload.copy()
 
@@ -89,4 +106,7 @@ def send_daily_notification():
                     }
                 }
             }
-            bot_controller.send_message(website)
+            send_message(website)
+
+
+send_daily_notification()

@@ -31,7 +31,7 @@ class FaceBookChatBot_controller:
             params=auth,
             json=payload
         )
-        return Response(response)
+        return Response(data=response.content, status=response.status_code)
 
     def trigger_post(self, request):
         output = request
@@ -160,7 +160,7 @@ class FaceBookChatBot_controller:
 
                     else:
                         payload['message'] = {
-                            'text': 'Successfully subscribed. Every 9AM you will receive latest information.'
+                            'text': 'Successfully subscribed. Every 10AM you will receive latest information.'
                         }
 
             # unsubscribe

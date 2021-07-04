@@ -47,7 +47,6 @@ INSTALLED_APPS = [
 
     # Libraries
     'django_filters',
-    'django_crontab',
 
     # APPs
     'Apps',
@@ -157,15 +156,6 @@ STATIC_URL = '/api/static/'
 
 STATIC_ROOT = BASE_DIR / 'static/api/static'
 
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'static/api/static'),
-# )
-
 # CORS Config
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False
-
-# CRON JOBS
-CRONJOBS = [
-    ('0 * * * *', 'Apps.FacebookChat.batch.send_daily_notification')
-]
