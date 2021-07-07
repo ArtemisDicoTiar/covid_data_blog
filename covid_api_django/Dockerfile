@@ -17,5 +17,5 @@ COPY . .
 
 # Deploy
 EXPOSE 8000
-RUN python manage.py migrate && python manage.py collectstatic --noinput && python manage.py crontab add
+RUN python manage.py migrate && python manage.py collectstatic --noinput
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
