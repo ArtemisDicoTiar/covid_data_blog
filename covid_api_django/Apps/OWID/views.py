@@ -45,8 +45,8 @@ class OWIDDataView(viewsets.ViewSet, ):
             offset=int)
     def mortality(self, *args, **kwargs):
         code = kwargs['regionCode']
-        # startDate = kwargs['startDate']
-        # offset = kwargs['offset']
+        startDate = kwargs['startDate']
+        offset = kwargs['offset']
 
         queryset = OWID_mortality.objects \
             .filter(iso_code=code,
