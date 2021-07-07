@@ -41,6 +41,13 @@ class OWIDDataService(BaseService):
 
         self.schema = OWIDSchema(self.fields)
 
+    @staticmethod
+    def get_linearised_mortality_data(serialiser):
+        if len(serialiser.data) == 0:
+            return HttpResponseBadRequest("Requested Data not found")
+
+        return Response(serialiser.data)
+
 
 class OWIDMetaService(BaseService):
     def __init__(self):

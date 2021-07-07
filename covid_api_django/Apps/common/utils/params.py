@@ -201,7 +201,7 @@ def params(**kwargs):
                 # find the param
                 param = None
                 if allow_POST:
-                    param = request.DATA.get(param_name, None)
+                    param = request.query_params.get(param_name, None)
                     param_type = 'POST'
                 if not param and allow_GET:
                     param = request.GET.get(param_name, None)

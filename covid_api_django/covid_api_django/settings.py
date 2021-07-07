@@ -24,7 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = secrets_app.DJANGO_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not secrets_app.IS_PUBLISH_SERVER
+# DEBUG = not secrets_app.IS_PUBLISH_SERVER
+DEBUG = True
+APPEND_SLASH = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -44,14 +46,11 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # Libraries
-    # 'django_filters',
-
+    'django_filters',
 
     # APPs
-    'covid_global',
-    'covid_info',
-
-    'Apps.CSSE'
+    'Apps',
+    'Apps.FacebookChat',
 ]
 
 MIDDLEWARE = [
@@ -156,10 +155,6 @@ USE_TZ = True
 STATIC_URL = '/api/static/'
 
 STATIC_ROOT = BASE_DIR / 'static/api/static'
-
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'static/api/static'),
-# )
 
 # CORS Config
 CORS_ORIGIN_ALLOW_ALL = True

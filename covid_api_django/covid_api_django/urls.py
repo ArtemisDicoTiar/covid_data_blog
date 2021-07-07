@@ -25,6 +25,7 @@ from Apps.UK import views as UK_views
 from Apps.Google import views as GoogleMobility_views
 from Apps.OWID import views as OWID_views
 from Apps.Helper import views as Helper_views
+from Apps.FacebookChat import views as FBChat_views
 
 API_TITLE = 'COVID-19 Data API'
 API_DESCRIPTION = 'This API provides COVID-19 related data.'
@@ -36,7 +37,8 @@ ptrns = CSSE_views.route.patterns \
         + UK_views.route.patterns \
         + GoogleMobility_views.route.patterns \
         + OWID_views.route.patterns \
-        + Helper_views.route.patterns
+        + Helper_views.route.patterns \
+        + FBChat_views.route.patterns
 
 for ptrn in ptrns:
     router.register(prefix=ptrn.pattern.regex.pattern[1:-1], viewset=ptrn.callback, basename=ptrn.name)

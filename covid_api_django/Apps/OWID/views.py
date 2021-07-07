@@ -50,15 +50,13 @@ class OWIDDataView(viewsets.ViewSet, ):
 
         queryset = OWID_mortality.objects \
             .filter(iso_code=code,
-                    date__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
-                                 (datetime.strptime(startDate, '%Y-%m-%d')
-                                  + timedelta(days=offset - 1)).date()
-                                 ),
                     p_scores_all_ages__isnull=False,
-                    )
-        serializer_class = OWID_mortalitySerializer(queryset, many=True)
+                    ) \
+            .latest('date')
 
-        return self.service.get_linearised_data(serializer_class)
+        serializer_class = OWID_mortalitySerializer(queryset, many=False)
+
+        return self.service.get_linearised_mortality_data(serializer_class)
 
     @action(methods=service.methods, detail=False)
     @params(regionCode=str,
