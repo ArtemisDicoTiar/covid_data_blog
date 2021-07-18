@@ -14,6 +14,14 @@ def _write_message(payload, message):
     payload['message'] = message
 
 
+def _get_timezone(countryCode):
+    req_point = 'http://localhost:8000/api/region/global/timezone/'
+
+    response = requests.get(req_point, params={'CountryCode': countryCode})
+
+    return response
+
+
 def _get_user_info(user_id):
     req_point = 'https://graph.facebook.com/v11.0/{user_id}'.format(user_id=user_id)
 

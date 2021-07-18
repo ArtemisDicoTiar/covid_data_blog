@@ -50,6 +50,7 @@ class FaceBookChatBot_controller:
         scenario = Scenario(user_id=user_id)
         current_scenario = scenario.get_current_scenario(content)
         page_num = scenario.get_page_num(current_scenario, content)
-        payload = scenario.write_response(current_scenario, page_num)
+        country_code = scenario.get_country_code(current_scenario, content)
+        payload = scenario.write_response(current_scenario, page_num, country_code)
 
         return payload

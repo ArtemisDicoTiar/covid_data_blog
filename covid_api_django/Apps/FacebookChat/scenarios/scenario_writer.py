@@ -4,8 +4,9 @@ from http import HTTPStatus
 from pprint import pprint as pp
 
 from Apps.FacebookChat.scenarios.scenario_action import _write_message, _get_user_info, _save_user_info, \
-    _delete_user_info
-from Apps.FacebookChat.scenarios.utils.region import get_country_list
+    _delete_user_info, _get_timezone
+from Apps.FacebookChat.scenarios.utils.region import get_country_list, get_country
+from Apps.common.utils.GeoInfoConvertor import convert_code_from_3_to_2
 
 
 class ScenarioWriter:
@@ -13,7 +14,7 @@ class ScenarioWriter:
         self._user_id = None
         self._json_scenario = json.load(open('./scenarios.json'))
 
-    def write_response(self, current_scenario, page_num=None):
+    def write_response(self, current_scenario, page_num=None, countryCode=None):
         def _construct_payload():
             return {
                 'recipient': {'id': int(self._user_id)},
@@ -66,6 +67,12 @@ class ScenarioWriter:
 
             else:
                 user_data = json.loads(user_data_response.content)
+                timezone = _get_timezone(countryCode)
+                conv_countryCode = convert_code_from_3_to_2(countryCode)
+
+                user_data['locale'] = '_' + str(conv_countryCode)
+                user_data['timezone'] = int(timezone)
+
                 save_response = _save_user_info(user_data=user_data)
 
                 if save_response.status_code != HTTPStatus.OK:

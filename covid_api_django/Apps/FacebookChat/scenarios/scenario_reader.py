@@ -10,6 +10,13 @@ class ScenarioReader:
         return None
 
     @staticmethod
+    def get_country_code(scenario_num, content):
+        if scenario_num == 23:
+            return content['postback']['payload'].split('_')[-2]
+
+        return None
+
+    @staticmethod
     def get_current_scenario(content):
         def _is_postback(msg):
             if 'postback' in msg.keys():
@@ -57,5 +64,3 @@ class ScenarioReader:
 
         else:
             return ScenarioStatus.Error.Others
-
-
