@@ -41,7 +41,7 @@ class CSSE_Cases_predictionCountrySerializer(serializers.ModelSerializer):
             'predicted',
 
             # 'CountryCode',
-          
+
             'ContinentName',
             'date',
             'confirmed_prediction',
@@ -83,3 +83,28 @@ class CSSE_Cases_prediction_accuracyContinentSerializer(serializers.ModelSeriali
             'lastweek_accuracy',
         ]
 
+
+class CSSE_Cases_LSTM_predictionCountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CSSE_Cases_LSTM_prediction
+        fields = [
+            'predicted',
+            # 'CountryCode',
+            'ContinentName',
+            'date',
+            'confirmed_prediction',
+        ]
+
+
+class CSSE_Cases_LSTM_prediction_accuracyCountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CSSE_Cases_LSTM_prediction_accuracy
+        fields = [
+            'calculated',
+            'CountryCode',
+            'ContinentName',
+            'yesterday_accuracy',
+            'lastweek_accuracy',
+            'last2week_accuracy',
+            'last4week_accuracy',
+        ]
