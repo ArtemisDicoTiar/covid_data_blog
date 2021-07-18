@@ -20,7 +20,7 @@ def _get_user_info(user_id):
     response = requests.get(
         req_point,
         params={
-            'fields': 'id,name,locale,timezone',
+            'fields': 'id,name',
             'access_token': secrets_app.FACEBOOK_CHAT_ACCESS_TOKEN
         }
     )

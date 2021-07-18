@@ -1,8 +1,10 @@
 import json
+from http import HTTPStatus
 
 from pprint import pprint as pp
 
-from Apps.FacebookChat.scenarios.scenario_action import _write_message
+from Apps.FacebookChat.scenarios.scenario_action import _write_message, _get_user_info, _save_user_info, \
+    _delete_user_info
 from Apps.FacebookChat.scenarios.utils.region import get_country_list
 
 
@@ -54,27 +56,41 @@ class ScenarioWriter:
                                                                             page=page_num)
             _write_message(payload, country_quick_reply_obj)
 
-        # Subscription result
-        elif 201 <= current_scenario <= 203:
-            if current_scenario == 201:
-                _write_message(payload, self._json_scenario['subscribe']['success'])
+        # COUNTRY selected
+        elif current_scenario == 23:
+            user_data_response = _get_user_info(user_id=self._user_id)
 
-            elif current_scenario == 202:
+            # user data request failed.
+            if user_data_response.status_code != HTTPStatus.OK:
                 _write_message(payload, self._json_scenario['subscribe']['user_info_request_fail'])
 
-            elif current_scenario == 203:
-                _write_message(payload, self._json_scenario['subscribe']['server_error'])
+            else:
+                user_data = json.loads(user_data_response.content)
+                save_response = _save_user_info(user_data=user_data)
+
+                if save_response.status_code != HTTPStatus.OK:
+                    _write_message(payload, self._json_scenario['subscribe']['server_error'])
+
+                else:
+                    _write_message(payload, self._json_scenario['subscribe']['success'])
 
         # Unsubscribe result
-        elif 301 <= current_scenario <= 303:
-            if current_scenario == 301:
-                _write_message(payload, self._json_scenario['unsubscribe']['success'])
+        elif current_scenario == 3:
+            user_data_response = _get_user_info(user_id=self._user_id)
 
-            elif current_scenario == 302:
+            # user data request failed.
+            if user_data_response.status_code != HTTPStatus.OK:
                 _write_message(payload, self._json_scenario['unsubscribe']['user_info_request_fail'])
 
-            elif current_scenario == 303:
-                _write_message(payload, self._json_scenario['unsubscribe']['server_error'])
+            else:
+                user_data = json.loads(user_data_response.content)
+                delete_response = _delete_user_info(user_data=user_data)
+
+                if delete_response.status_code != HTTPStatus.OK:
+                    _write_message(payload, self._json_scenario['unsubscribe']['server_error'])
+
+                else:
+                    _write_message(payload, self._json_scenario['unsubscribe']['success'])
 
         # Error
         # Others

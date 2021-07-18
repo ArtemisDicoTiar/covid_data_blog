@@ -1,3 +1,5 @@
+def get_country(content):
+    return content['postback']['payload'].split('_')[-2]
 
 
 def get_country_list(continent: str,

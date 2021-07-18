@@ -11,14 +11,10 @@ class ScenarioStatus:
             Europe = 224
             Oceania = 225
 
-        Success = 201
-        Fail = 202
-        ServerError = 203
+        CountrySelected = 23
 
     class Unsubscribe:
-        Success = 301
-        Fail = 302
-        ServerError = 303
+        Requested = 3
 
     class Error:
         Others = 40
