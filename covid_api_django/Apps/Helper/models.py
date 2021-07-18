@@ -13,3 +13,12 @@ class GlobalRegionMeta(models.Model):
     class Meta:
         app_label = 'covid_base'
         db_table = '_meta_data'
+
+
+class RegionTimeZone(models.Model):
+    CountryCode = models.TextField(primary_key=True)
+    timezone = models.IntegerField()
+
+    class Meta:
+        app_label = 'covid_info'
+        db_table = 'region_time'

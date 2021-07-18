@@ -7,7 +7,8 @@ from route_decorator import Route
 
 import secrets_app
 from Apps.Helper.controller import get_region_search_result, get_continent_list, get_organised_region_info_from_long_lat
-from Apps.Helper.models import GlobalRegionMeta
+from Apps.Helper.models import GlobalRegionMeta, RegionTimeZone
+from Apps.Helper.serializers import RegionTimeZone_Serializer
 from Apps.Helper.services import CountrySearch_Service, UKRegionSearch_Service, GeoApiSearch_Service
 from Apps.UK.models import UK_Cases
 from Apps.common.utils.params import params
@@ -27,6 +28,17 @@ class GlobalRegionSearch_View(viewsets.ViewSet, ):
         regionName = kwargs['regionName']
 
         return get_region_search_result(regionName)
+
+    @action(methods=service.methods, detail=False)
+    @params(CountryCode=str)
+    def timezone(self, *args, **kwargs):
+        CountryCode = kwargs['CountryCode']
+
+        queryset = RegionTimeZone.objects.filter(CountryCode=str(CountryCode).capitalize())
+
+        serializer_class = RegionTimeZone_Serializer(queryset, many=True)
+
+        return self.service.get_linearised_data_from_serialiser(serializer_class)
 
     @action(methods=service.methods, detail=False)
     def continent_list(self, *args, **kwargs):
