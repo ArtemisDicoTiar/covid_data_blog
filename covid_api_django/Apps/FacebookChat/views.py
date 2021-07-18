@@ -28,7 +28,7 @@ class FacebookChatbot_View(viewsets.ViewSet, ):
 
     @action(methods=service.methods, detail=False)
     def webhook(self, *args, **kwargs):
-        pp(args)
+        pp(args[0].data)
         if args[0].method == 'GET':
             if len(args[0].query_params) > 0:
                 mode = args[0].query_params['hub.mode']
