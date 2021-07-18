@@ -10,7 +10,7 @@ from Apps.common.utils.GeoInfoConvertor import get_country_official_name, get_co
 class CountrySearch_Service(BaseService):
     def __init__(self):
         self.dropped_keys = []
-        self.single_keys = []
+        self.single_keys = ['CountryCode', 'timezone']
 
         self.params = []
         self.methods = ['get']
@@ -24,6 +24,22 @@ class CountrySearch_Service(BaseService):
             return HttpResponseBadRequest("Requested Data not found")
 
         return Response(list(map(lambda row: {'name': row['country_name'], 'code': row['country_code']}, query)))
+
+    def get_linearised_data_from_serialiser(self, serialiser):
+        if len(serialiser.data) == 0:
+            return HttpResponseBadRequest("Requested Data not found")
+
+        return Response(dict(
+                map(lambda key: (
+                    (key, map(lambda row_data: row_data[key], serialiser.data))
+                    if key not in self.dropped_keys and key not in self.single_keys
+                    else (
+                        (key, serialiser.data[0][key])
+                        if key in self.single_keys
+                        else None
+                    )
+                ), serialiser.child.fields)
+        ))
 
 
 class UKRegionSearch_Service(BaseService):
@@ -92,6 +108,20 @@ class RegionSearch_Schema(AutoSchema):
             self.manual_fields = []
             param = Params(name='regionName', dtype=str, required=True,
                            location='query', description="searching country ISO3 code by region name")
+
+            custom_fields.append(
+                coreapi.Field(
+                    name=param.name,
+                    required=param.required,
+                    location=param.location,
+                    schema=param.get_schema(),
+                ),
+            )
+
+        elif path.lower() == "/api/region/global/timezone/":
+            self.manual_fields = []
+            param = Params(name='CountryCode', dtype=str, required=True,
+                           location='query', description="Country's ISO code. (ISO3)")
 
             custom_fields.append(
                 coreapi.Field(

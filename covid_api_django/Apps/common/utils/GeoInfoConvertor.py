@@ -57,6 +57,10 @@ def convert_code_from_2_to_3(iso_code: str):
     return coco.convert(names=iso_code, to='ISO3')
 
 
+def convert_code_from_3_to_2(iso_code: str):
+    return coco.convert(names=iso_code, to='ISO2')
+
+
 def get_country_iso_information(iso_code: str):
     if len(iso_code) == 2:
         return pc.countries.get(alpha_2=iso_code)
