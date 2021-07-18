@@ -12,7 +12,7 @@ from Apps.common.utils.GeoInfoConvertor import convert_code_from_3_to_2
 class ScenarioWriter:
     def __init__(self):
         self._user_id = None
-        self._json_scenario = json.load(open('./scenarios.json'))
+        self._json_scenario = json.load(open('./Apps/FacebookChat/scenarios/scenarios.json'))
 
     def write_response(self, current_scenario, page_num=None, countryCode=None):
         def _construct_payload():
