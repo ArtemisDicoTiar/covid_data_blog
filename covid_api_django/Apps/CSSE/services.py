@@ -7,7 +7,7 @@ from Apps.common.services import Params, BaseService
 class CSSEService(BaseService):
     def __init__(self, filterRegion):
         self.dropped_keys = []
-        self.single_keys = ['CountryCode', 'ContinentName']
+        self.single_keys = ['CountryCode', 'ContinentName', 'predicted']
 
         self.params = [
             Params(name='offset', dtype=int, required=True,
@@ -46,7 +46,7 @@ class CSSESchema(AutoSchema):
     def get_manual_fields(self, path, method):
         super().get_manual_fields(path, method)
         custom_fields = []
-        if path.lower() == "/api/covid/global/prediction/":
+        if path.lower() == "/api/covid/global/prediction/" or path.lower() == "/api/covid/global/lstm_prediction/":
             predDate_params = Params(name='predictedDate', dtype=str, required=True,
                                      location='query', description="Target predicted date (format: %Y-%m-%d)")
             custom_fields = [

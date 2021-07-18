@@ -6,7 +6,7 @@ from route_decorator import Route
 
 from Apps.CSSE.serializers import *
 from Apps.CSSE.services import CSSEService
-from Apps.common.utils.filter import prediction_parameter_validate
+from Apps.common.utils.filter import prediction_parameter_validate, lstm_prediction_parameter_validate
 from Apps.common.utils.params import params
 
 route = Route('/covid')
@@ -67,6 +67,32 @@ class CSSE_CasesView(viewsets.ViewSet, ):
 
     @action(methods=csseService.methods, detail=False)
     @params(CountryCode=str,
+            predictedDate=str,
+            startDate=str,
+            offset=int)
+    def lstm_prediction(self, *args, **kwargs):
+        CountryCode = kwargs['CountryCode']
+        predictedDate = kwargs['predictedDate']
+        startDate = kwargs['startDate']
+        offset = kwargs['offset']
+
+        if lstm_prediction_parameter_validate(predictedDate=predictedDate, date=startDate, offset=offset):
+            return lstm_prediction_parameter_validate(predictedDate=predictedDate, date=startDate, offset=offset)
+
+        queryset = CSSE_Cases_LSTM_prediction.objects \
+            .filter(CountryCode=CountryCode,
+                    predicted__exact=datetime.strptime(predictedDate, '%Y-%m-%d').date(),
+                    date__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
+                                 (datetime.strptime(startDate, '%Y-%m-%d')
+                                  + timedelta(days=offset - 1)).date()
+                                 )
+                    )
+        serializer_class = CSSE_Cases_LSTM_predictionCountrySerializer(queryset, many=True)
+
+        return self.csseService.get_linearised_data(serializer_class)
+
+    @action(methods=csseService.methods, detail=False)
+    @params(CountryCode=str,
             startDate=str,
             offset=int)
     def predictionAccuracy(self, *args, **kwargs):
@@ -85,3 +111,22 @@ class CSSE_CasesView(viewsets.ViewSet, ):
 
         return self.csseService.get_linearised_data(serializer_class)
 
+    @action(methods=csseService.methods, detail=False)
+    @params(CountryCode=str,
+            startDate=str,
+            offset=int)
+    def lstm_predictionAccuracy(self, *args, **kwargs):
+        CountryCode = kwargs['CountryCode']
+        startDate = kwargs['startDate']
+        offset = kwargs['offset']
+
+        queryset = CSSE_Cases_LSTM_prediction_accuracy.objects \
+            .filter(CountryCode=CountryCode,
+                    calculated__range=(datetime.strptime(startDate, '%Y-%m-%d').date(),
+                                       (datetime.strptime(startDate, '%Y-%m-%d')
+                                        + timedelta(days=offset - 1)).date()
+                                       )
+                    )
+        serializer_class = CSSE_Cases_LSTM_prediction_accuracyCountrySerializer(queryset, many=True)
+
+        return self.csseService.get_linearised_data(serializer_class)
