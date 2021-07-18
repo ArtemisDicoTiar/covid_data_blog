@@ -48,6 +48,7 @@ class FaceBookChatBot_controller:
     @staticmethod
     def communicate(content, user_id):
         pp(content)
+
         scenario = Scenario(user_id=user_id)
         current_scenario = scenario.get_current_scenario(content)
         page_num = scenario.get_page_num(current_scenario, content)
