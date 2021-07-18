@@ -28,7 +28,7 @@ class FaceBookChatBot_controller:
             params=auth,
             json=payload
         )
-        return response
+        return Response(data=response.content, status=response.status_code)
 
     def trigger_post(self, request):
         output = request
