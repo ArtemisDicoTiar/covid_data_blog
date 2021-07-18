@@ -5,7 +5,7 @@ from pprint import pprint as pp
 
 from Apps.FacebookChat.scenarios.scenario_action import _write_message, _get_user_info, _save_user_info, \
     _delete_user_info, _get_timezone
-from Apps.FacebookChat.scenarios.utils.region import get_country_list, get_country
+from Apps.FacebookChat.scenarios.utils.region import get_country_list
 from Apps.common.utils.GeoInfoConvertor import convert_code_from_3_to_2
 
 
