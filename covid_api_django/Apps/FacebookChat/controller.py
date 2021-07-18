@@ -32,6 +32,8 @@ class FaceBookChatBot_controller:
 
     def trigger_post(self, request):
         output = request
+        print('REQUEST')
+        pp(request)
         for event in output['entry']:
             messaging = event['messaging']
             for message in messaging:
@@ -47,8 +49,7 @@ class FaceBookChatBot_controller:
 
     @staticmethod
     def communicate(content, user_id):
-        pp(content)
-
+        # pp(content)
         scenario = Scenario(user_id=user_id)
         current_scenario = scenario.get_current_scenario(content)
         page_num = scenario.get_page_num(current_scenario, content)
