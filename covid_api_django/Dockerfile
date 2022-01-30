@@ -15,6 +15,9 @@ COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python
 
 COPY . .
 
+RUN pip uninstall numpy
+RUN pip install numpy
+
 # Deploy
 EXPOSE 8000
 RUN python manage.py migrate && python manage.py collectstatic --noinput
