@@ -15,7 +15,7 @@ COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python
 
 COPY . .
 
-RUN pip uninstall numpy
+RUN pip uninstall numpy --yes
 RUN pip install numpy
 
 # Deploy
